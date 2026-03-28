@@ -1,0 +1,100 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Дверь «Элегант»",
+      "category": "interior",
+      "price": 12900,
+      "oldPrice": 15900,
+      "image": "/images/door1.jpg",
+      "description": "Белая матовая дверь со стеклянной вставкой. Идеально для современного интерьера.",
+      "material": "Экошпон",
+      "size": "600x2000",
+      "popular": true
+    },
+    {
+      "id": 2,
+      "name": "Дверь «Классик»",
+      "category": "interior",
+      "price": 15400,
+      "oldPrice": null,
+      "image": "/images/door2.jpg",
+      "description": "Орех, филенчатая конструкция. Классический дизайн для уютного дома.",
+      "material": "Массив сосны",
+      "size": "700x2000",
+      "popular": true
+    },
+    {
+      "id": 3,
+      "name": "Дверь «Лофт»",
+      "category": "interior",
+      "price": 18700,
+      "oldPrice": 21000,
+      "image": "/images/door3.jpg",
+      "description": "Серый бетон, металлик. Стиль лофт для современных пространств.",
+      "material": "ЛДСП",
+      "size": "800x2000",
+      "popular": false
+    },
+    {
+      "id": 4,
+      "name": "Дверь «Сканди»",
+      "category": "interior",
+      "price": 14200,
+      "oldPrice": null,
+      "image": "/images/door4.jpg",
+      "description": "Ясень светлый, минимализм. Подчеркнет скандинавский стиль.",
+      "material": "Экошпон",
+      "size": "700x2000",
+      "popular": true
+    },
+    {
+      "id": 5,
+      "name": "Дверь «Венге»",
+      "category": "interior",
+      "price": 22500,
+      "oldPrice": 26000,
+      "image": "/images/door5.jpg",
+      "description": "Массив дуба, глубокий темный оттенок. Премиум-класс.",
+      "material": "Массив дуба",
+      "size": "800x2000",
+      "popular": false
+    },
+    {
+      "id": 6,
+      "name": "Дверь «Грация»",
+      "category": "glass",
+      "price": 19900,
+      "oldPrice": null,
+      "image": "/images/door6.jpg",
+      "description": "Вставки из матового стекла. Элегантность и свет.",
+      "material": "ЛДСП + стекло",
+      "size": "600x2000",
+      "popular": true
+    },
+    {
+      "id": 7,
+      "name": "Входная дверь «Форт»",
+      "category": "entrance",
+      "price": 38900,
+      "oldPrice": 45000,
+      "image": "/images/door7.jpg",
+      "description": "Утепленная, 3 контура уплотнения. Максимальная защита.",
+      "material": "Сталь",
+      "size": "900x2050",
+      "popular": true
+    },
+    {
+      "id": 8,
+      "name": "Дверь «Престиж»",
+      "category": "interior",
+      "price": 31200,
+      "oldPrice": null,
+      "image": "/images/door8.jpg",
+      "description": "Эксклюзивный дизайн, ручная отделка.",
+      "material": "Шпон натуральный",
+      "size": "800x2000",
+      "popular": false
+    }
+  ]
+}

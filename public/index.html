@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ДвериСтиль | Качественные межкомнатные двери</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">🚪</div>
+                <span class="logo-text">ДвериСтиль</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#services">Услуги</a></li>
+                <li><a href="#catalog">Каталог</a></li>
+                <li><a href="#advantages">Преимущества</a></li>
+                <li><a href="#reviews">Отзывы</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+            <button class="mobile-menu-btn" id="menuToggle">☰</button>
+        </div>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="#services">Услуги</a>
+            <a href="#catalog">Каталог</a>
+            <a href="#advantages">Преимущества</a>
+            <a href="#reviews">Отзывы</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Связаться</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- ГЕРОЙ -->
+        <div class="container">
+            <div class="hero">
+                <div>
+                    <h1>Двери, которые вдохновляют</h1>
+                    <p>Качественные межкомнатные двери в Казани. Широкий выбор, стильный дизайн, быстрая установка. Создайте уют вместе с нами!</p>
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                        <a href="#catalog" class="btn btn-dark">Выбрать дверь</a>
+                        <a href="#contact" class="btn btn-outline">Связаться</a>
+                        <button id="whatsappBtn" class="btn btn-wa" style="background:#25D366">WhatsApp</button>
+                    </div>
+                </div>
+                <div class="hero-img" style="background-image: url('https://placehold.co/800x600/eef2f5/1e1e2a?text=Современные+двери');"></div>
+            </div>
+        </div>
+
+        <!-- УСЛУГИ -->
+        <div class="container" id="services">
+            <h2 class="section-title">Наши услуги</h2>
+            <div class="services-grid">
+                <div class="service-card"><i class="bi bi-door-open"></i><h3>Установка дверей</h3><p>Профессиональный монтаж любой сложности</p></div>
+                <div class="service-card"><i class="bi bi-grid-3x3-gap-fill"></i><h3>Фурнитура</h3><p>Ручки, петли, замки премиум-класса</p></div>
+                <div class="service-card"><i class="bi bi-truck"></i><h3>Доставка</h3><p>Быстрая доставка по Казани и области</p></div>
+                <div class="service-card"><i class="bi bi-chat-dots"></i><h3>Консультации</h3><p>Поможем подобрать идеальное решение</p></div>
+            </div>
+        </div>
+
+        <!-- КАТАЛОГ -->
+        <div class="container" id="catalog">
+            <h2 class="section-title">Популярные модели</h2>
+            <div id="catalogContainer" class="catalog-grid">
+                <div style="text-align:center; padding:40px">Загрузка каталога...</div>
+            </div>
+            <div style="text-align:center; margin: 20px 0 40px">
+                <a href="/catalog.html" class="btn btn-outline">Смотреть весь каталог →</a>
+            </div>
+        </div>
+
+        <!-- ПРЕИМУЩЕСТВА -->
+        <div class="container" id="advantages">
+            <h2 class="section-title">Почему выбирают нас</h2>
+            <div class="advantages-grid">
+                <div class="advantage-item"><i class="bi bi-star-fill"></i><h3>Качество</h3><p>Только проверенные материалы</p></div>
+                <div class="advantage-item"><i class="bi bi-shield-check"></i><h3>Гарантия</h3><p>До 5 лет на все двери</p></div>
+                <div class="advantage-item"><i class="bi bi-truck"></i><h3>Быстрая доставка</h3><p>По Казани за 1-2 дня</p></div>
+                <div class="advantage-item"><i class="bi bi-hand-thumbs-up"></i><h3>500+ клиентов</h3><p>Довольны нашими дверями</p></div>
+            </div>
+        </div>
+
+        <!-- ОТЗЫВЫ -->
+        <div class="container" id="reviews">
+            <h2 class="section-title">Наши клиенты говорят</h2>
+            <div class="reviews-grid">
+                <div class="review-card"><p class="review-text">"Быстрая установка, отличное качество! Вернусь снова."</p><p class="review-author">— Алексей Иванов</p></div>
+                <div class="review-card"><p class="review-text">"Двери шикарные, менеджеры помогли с выбором. Рекомендую!"</p><p class="review-author">— Мария Петрова</p></div>
+                <div class="review-card"><p class="review-text">"Лучшее соотношение цены и качества в Казани. Спасибо!"</p><p class="review-author">— Дмитрий Соколов</p></div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="container" id="faq">
+            <h2 class="section-title">Частые вопросы</h2>
+            <div class="faq-grid">
+                <div class="faq-item"><h3>🚪 Какие двери выбрать?</h3><p>У нас представлены модели из массива, экошпона и ламинированные. Подберем под ваш интерьер.</p></div>
+                <div class="faq-item"><h3>✅ Есть ли гарантия?</h3><p>Да, на все двери гарантия до 5 лет, на монтаж — 1 год.</p></div>
+                <div class="faq-item"><h3>📦 Как сделать заказ?</h3><p>Оставьте заявку в форме ниже или напишите в WhatsApp — ответим сразу.</p></div>
+            </div>
+        </div>
+
+        <!-- КОНТАКТЫ + ФОРМА -->
+        <div class="container" id="contact">
+            <div class="contact-section">
+                <div class="contact-flex">
+                    <div>
+                        <h2 style="font-size:2rem; margin-bottom:16px">Свяжитесь с нами</h2>
+                        <p style="margin-bottom:24px">Оставьте заявку, и мы перезвоним в течение 15 минут. Или напишите в мессенджеры.</p>
+                        <div class="contact-buttons-group">
+                            <button id="whatsappBtn2" class="btn btn-wa" style="background:#25D366"><i class="bi bi-whatsapp"></i> WhatsApp</button>
+                            <a href="https://t.me/doors_kzn" target="_blank" class="btn btn-tg" style="background:#26A5E4"><i class="bi bi-telegram"></i> Telegram</a>
+                            <a href="mailto:stepanovpg@gmail.com" class="btn btn-outline"><i class="bi bi-envelope"></i> Email</a>
+                        </div>
+                    </div>
+                    <div>
+                        <form id="orderForm">
+                            <div class="form-group"><input type="text" id="orderName" placeholder="Ваше имя *" required></div>
+                            <div class="form-group"><input type="tel" id="orderPhone" placeholder="Телефон *" required></div>
+                            <div class="form-group"><input type="text" id="orderProduct" placeholder="Какая модель интересует?"></div>
+                            <div class="form-group"><textarea id="orderComment" rows="3" placeholder="Комментарий"></textarea></div>
+                            <button type="submit" class="btn btn-dark" style="width:100%">Отправить заявку</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© ДвериСтиль | Казань, ул. Центральная 15 | 8 (950) 310-15-60 | stepanovpg@gmail.com</p>
+        </div>
+    </footer>
+
+    <script src="/script.js"></script>
+    <script>
+        // Дополнительные обработчики для WhatsApp кнопок
+        document.addEventListener('DOMContentLoaded', () => {
+            const waBtns = document.querySelectorAll('#whatsappBtn, #whatsappBtn2');
+            waBtns.forEach(btn => {
+                btn.addEventListener('click', openWhatsApp);
+            });
+        });
+    </script>
+</body>
+</html>
