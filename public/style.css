@@ -85,15 +85,6 @@ body {
     color: #b9ac9f;
 }
 
-.hr {
-    width: 100vw;
-    border: none;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #1e293b, #5b6e7c, #1e293b, transparent);
-    margin: 0;
-    margin-bottom: 60px;
-}
-
 .mobile-menu-btn {
     display: none;
     font-size: 28px;
@@ -125,7 +116,7 @@ body {
 /* ========== КНОПКИ ========== */
 .btn {
     display: inline-block;
-    padding: 12px 32px;
+    padding: 16px 50px;
     border-radius: 40px;
     font-weight: 600;
     text-decoration: none;
@@ -160,7 +151,7 @@ body {
 }
 
 .btn-sm {
-    padding: 8px 20px;
+    padding: 15px 60px;
     font-size: 0.85rem;
 }
 
@@ -174,12 +165,16 @@ body {
     color: white;
 }
 
+.btn-long {
+        padding: 16px 80px;
+}
+
 .hero {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
     align-items: center;
-    padding: 60px 0 80px;
+    padding: 60px 0 150px;
 }
 
 .hero h1 {
@@ -216,7 +211,7 @@ body {
 /* Услуги */
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 32px;
     margin: 40px 0 60px;
 }
@@ -258,6 +253,7 @@ body {
     box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     transition: all 0.25s;
     border: 1px solid #edf2f7;
+    padding-top: 10px;
 }
 
 .product-card:hover {
@@ -301,6 +297,7 @@ body {
     color: #6b7280;
     font-size: 0.85rem;
     margin: 8px 0;
+    margin-bottom: 20px;
 }
 
 /* Преимущества */
@@ -481,7 +478,7 @@ footer {
 }
 
 /* Адаптив */
-@media (max-width: 800px) {
+@media (max-width: 992px) {
     .hero {
         grid-template-columns: 1fr;
         text-align: center;
@@ -515,9 +512,14 @@ footer {
     .contact-section {
         padding: 32px 24px;
     }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .container {
         padding: 0 16px;
     }

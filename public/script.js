@@ -35,7 +35,7 @@ function renderProducts(products) {
                     ${product.oldPrice ? `<span class="product-old-price">${formatPrice(product.oldPrice)} ₽</span>` : ''}
                 </div>
                 <div class="product-desc">${escapeHtml(product.description)}</div>
-                <div style="margin-top: 16px;">
+                <div style="margin-bottom: 5px; text-align: center;">
                     <button class="btn btn-sm btn-dark" onclick="openOrderForm('${escapeHtml(product.name)}')">Заказать</button>
                 </div>
             </div>
