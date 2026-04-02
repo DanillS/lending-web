@@ -230,7 +230,8 @@ body {
 
 .service-card i {
     font-size: 2.8rem;
-    color: #040404;
+    color: #c4a484;
+
 }
 
 .service-card h3 {
@@ -244,6 +245,7 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 32px;
     margin: 40px 0;
+    margin-bottom: 100px;
 }
 
 .product-card {
@@ -300,18 +302,43 @@ body {
     margin-bottom: 20px;
 }
 
+#advantages {
+    margin-bottom: 150px;
+}
+
 /* Преимущества */
 .advantages-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 32px;
-    margin: 40px 0;
+    margin: 40px 0 60px;
     text-align: center;
 }
 
 .advantage-item i {
     font-size: 2.5rem;
     color: #c4a484;
+}
+
+.advantage-item h3 {
+    margin: 16px 0 8px;
+    font-size: 1.3rem;
+}
+
+.advantage-item {
+    padding: 36px 24px;
+    border-radius: 28px;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.advantage-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+}
+
+#reviews {
+    margin-bottom: 100px;
 }
 
 /* Отзывы */
@@ -338,6 +365,10 @@ body {
 .review-author {
     font-weight: 700;
     color: #c4a484;
+}
+
+#faq {
+    margin-bottom: 100px;
 }
 
 /* FAQ */
@@ -514,6 +545,16 @@ footer {
     }
 
     .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .advantages-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
