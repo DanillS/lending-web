@@ -9,15 +9,14 @@ async function loadCatalog() {
         const response = await fetch('/api/products');
         const data = await response.json();
         allProducts = data.products || data;
-        renderProducts(allProducts);
+        renderProducts(allProducts, container);
     } catch (error) {
         console.error('Ошибка загрузки каталога:', error);
         container.innerHTML = '<p style="text-align:center">Ошибка загрузки каталога</p>';
     }
 }
 
-function renderProducts(products) {
-    const container = document.getElementById('catalogContainer');
+function renderProducts(products, container) {
     if (!container) return;
     
     if (!products || products.length === 0) {
@@ -35,12 +34,28 @@ function renderProducts(products) {
                     ${product.oldPrice ? `<span class="product-old-price">${formatPrice(product.oldPrice)} ₽</span>` : ''}
                 </div>
                 <div class="product-desc">${escapeHtml(product.description)}</div>
-                <div style="margin-bottom: 5px; text-align: center;">
+                <div style="margin-bottom: 5px;margin-top: auto; text-align: center;">
                     <button class="btn btn-sm btn-dark" onclick="openOrderForm('${escapeHtml(product.name)}')">Заказать</button>
                 </div>
             </div>
         </div>
     `).join('');
+}
+
+async function loadPopularProducts() {
+    const container = document.getElementById('popularContainer')
+    if (!container) return 
+
+    try {
+        const response = await fetch('api/products')
+        const data = await response.json()
+        const products = data.products || data
+        const popular = products.filter(p => p.popular === true)
+        renderProducts(popular, container)
+    } catch (error) {
+        console.error('Ошибка загрузки популярных:', error)
+        container.innerHTML = '<p style="text-align: center">Ошибка загрузки</p>'
+    }
 }
 
 function formatPrice(price) {
@@ -197,7 +212,15 @@ function initMobileMenu() {
 
 // ============ ИНИЦИАЛИЗАЦИЯ ============
 document.addEventListener('DOMContentLoaded', () => {
-    loadCatalog();
+    const catalogContainer = document.getElementById('catalogContainer')
+    const popularContainer = document.getElementById('popularContainer')
+
+    if (catalogContainer)
+        loadCatalog();
+
+    if (popularContainer)
+        loadPopularProducts()
+    
     initMobileMenu();
     
     const orderForm = document.getElementById('orderForm');
