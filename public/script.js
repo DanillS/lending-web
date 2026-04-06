@@ -172,18 +172,6 @@ function openOrderForm(productName) {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ============ WHATSAPP ССЫЛКА ============
-async function openWhatsApp() {
-    try {
-        const response = await fetch('/api/whatsapp-link');
-        const data = await response.json();
-        window.open(data.link, '_blank');
-    } catch (error) {
-        console.error('Ошибка:', error);
-        window.open('https://wa.me/79503101560', '_blank');
-    }
-}
-
 // ============ УВЕДОМЛЕНИЯ ============
 function showToast(message) {
     const toast = document.createElement('div');
@@ -227,8 +215,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (orderForm) {
         orderForm.addEventListener('submit', submitOrder);
     }
-    
-    // Если есть глобальные кнопки WhatsApp
-    const waBtn = document.getElementById('whatsappBtn');
-    if (waBtn) waBtn.addEventListener('click', openWhatsApp);
 });

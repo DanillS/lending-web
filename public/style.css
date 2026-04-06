@@ -124,6 +124,7 @@ body {
     border: none;
     cursor: pointer;
     font-size: 0.95rem;
+    border: 2px solid transparent;
 }
 
 .btn-dark {
@@ -160,13 +161,44 @@ body {
     color: white;
 }
 
+.btn-wa:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    border: 2px solid #25D366;
+    color: #25D366;
+}
+
 .btn-tg {
     background: #26A5E4;
     color: white;
 }
 
+.btn-tg:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    border: 2px solid #26A5E4;
+    color: #26A5E4;
+}
+
 .btn-long {
-        padding: 16px 80px;
+    padding: 16px 80px;
+}
+
+.btn-tie {
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-em {
+    color:white;
+    background: #c4a484;
+}
+
+.btn-em:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    border: 2px solid #c4a484;
+    color: #c4a484;
 }
 
 .hero {
@@ -398,7 +430,7 @@ body {
 
 /* Контакты */
 .contact-section {
-    background: #f7f9fc;
+    background: white;
     border-radius: 48px;
     padding: 56px 40px;
     margin: 60px 0;
@@ -408,6 +440,10 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 48px;
+}
+
+.contact {
+    text-align: center;
 }
 
 .form-group {
@@ -553,6 +589,10 @@ footer {
     
     .contact-section {
         padding: 32px 24px;
+    }
+
+    .contact {
+        text-align:center;
     }
 
     .services-grid {

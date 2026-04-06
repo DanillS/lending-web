@@ -114,13 +114,13 @@
         <div class="container" id="contact">
             <div class="contact-section">
                 <div class="contact-flex">
-                    <div>
-                        <h2 style="font-size:2rem; margin-bottom:16px">Свяжитесь с нами</h2>
-                        <p style="margin-bottom:24px">Оставьте заявку, и мы перезвоним в течение 15 минут. Или напишите в мессенджеры.</p>
-                        <div class="contact-buttons-group">
-                            <button id="whatsappBtn2" class="btn btn-wa" style="background:#25D366"><i class="bi bi-whatsapp"></i> WhatsApp</button>
-                            <a href="https://t.me/pr0gger/" target="_blank" class="btn btn-tg" style="background:#26A5E4"><i class="bi bi-telegram"></i> Telegram</a>
-                            <a href="mailto:stepanovpg@gmail.com" class="btn btn-outline"><i class="bi bi-envelope"></i> Email</a>
+                    <div class="contact">
+                        <h2 style="font-size:2rem; margin-bottom:48px">Свяжитесь с нами</h2>
+                        <p style="margin-bottom:48px">Оставьте заявку, и мы перезвоним в течение 15 минут. Или напишите в мессенджеры.</p>
+                        <div>
+                            <a href="https://wa.me/79503101560" target="_blank" class="btn btn-wa btn-tie"><i class="bi bi-whatsapp"></i> WhatsApp</a>
+                            <a href="https://t.me/pr0gger/" target="_blank" class="btn btn-tg btn-tie"><i class="bi bi-telegram"></i> Telegram</a>
+                            <a href="mailto:stepanovpg@gmail.com" class="btn btn-em btn-tie"><i class="bi bi-envelope"></i> Email</a>
                         </div>
                     </div>
                     <div>
@@ -144,14 +144,5 @@
     </footer>
 
     <script src="/script.js"></script>
-    <script>
-        // Дополнительные обработчики для WhatsApp кнопок
-        document.addEventListener('DOMContentLoaded', () => {
-            const waBtns = document.querySelectorAll('#whatsappBtn, #whatsappBtn2');
-            waBtns.forEach(btn => {
-                btn.addEventListener('click', openWhatsApp);
-            });
-        });
-    </script>
 </body>
 </html>

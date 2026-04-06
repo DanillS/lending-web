@@ -63,16 +63,34 @@
         </div>
         
         <!-- БЫСТРАЯ ФОРМА -->
-        <div class="container" id="contact" style="margin-top: 40px; margin-bottom: 60px;">
+        <div class="container" id="contact">
             <div class="contact-section">
-                <h2 style="font-size:1.8rem; margin-bottom:24px; text-align:center">Не нашли подходящую дверь?</h2>
-                <p style="text-align:center; margin-bottom:24px">Оставьте заявку, и мы подберем идеальный вариант под ваш интерьер!</p>
-                <form id="orderForm" style="max-width: 500px; margin: 0 auto;">
-                    <div class="form-group"><input type="text" id="orderName" placeholder="Ваше имя *" required></div>
-                    <div class="form-group"><input type="tel" id="orderPhone" placeholder="Телефон *" required></div>
-                    <div class="form-group"><input type="text" id="orderProduct" placeholder="Какую дверь ищете?"></div>
-                    <button type="submit" class="btn btn-dark" style="width:100%">Отправить заявку</button>
-                </form>
+                <div class="contact-flex">
+                    <div class="contact">
+                        <h2 style="font-size:2rem; margin-bottom:48px">Не нашли подходящую дверь?</h2>
+                        <p style="margin-bottom:48px">Оставьте заявку, и мы перезвоним в течение 15 минут. Или напишите в
+                            мессенджеры.</p>
+                        <div>
+                            <a href="https://wa.me/79503101560" target="_blank" class="btn btn-wa btn-tie"><i
+                                    class="bi bi-whatsapp"></i> WhatsApp</a>
+                            <a href="https://t.me/pr0gger/" target="_blank" class="btn btn-tg btn-tie"><i
+                                    class="bi bi-telegram"></i> Telegram</a>
+                            <a href="mailto:stepanovpg@gmail.com" class="btn btn-em btn-tie"><i class="bi bi-envelope"></i>
+                                Email</a>
+                        </div>
+                    </div>
+                    <div>
+                        <form id="orderForm">
+                            <div class="form-group"><input type="text" id="orderName" placeholder="Ваше имя *" required></div>
+                            <div class="form-group"><input type="tel" id="orderPhone" placeholder="Телефон *" required></div>
+                            <div class="form-group"><input type="text" id="orderProduct" placeholder="Какая модель интересует?">
+                            </div>
+                            <div class="form-group"><textarea id="orderComment" rows="3" placeholder="Комментарий"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-dark" style="width:100%">Отправить заявку</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
