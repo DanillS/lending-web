@@ -74,11 +74,14 @@ function escapeHtml(str) {
 
 // ============ ФИЛЬТРАЦИЯ ============
 function filterByCategory(category) {
+    const container = document.getElementById('catalogContainer')
+    if (!container) return
+
     if (category === 'all') {
-        renderProducts(allProducts);
+        renderProducts(allProducts, container);
     } else {
         const filtered = allProducts.filter(p => p.category === category);
-        renderProducts(filtered);
+        renderProducts(filtered, container);
     }
     
     // Активная кнопка
@@ -91,19 +94,25 @@ function filterByCategory(category) {
 }
 
 function searchProducts() {
+    const container = document.getElementById('catalogContainer')
+    if (!container) return
+
     const query = document.getElementById('searchInput')?.value.toLowerCase() || '';
     if (!query) {
-        renderProducts(allProducts);
+        renderProducts(allProducts, container);
         return;
     }
     const filtered = allProducts.filter(p => 
         p.name.toLowerCase().includes(query) || 
         p.description.toLowerCase().includes(query)
     );
-    renderProducts(filtered);
+    renderProducts(filtered, container);
 }
 
 function sortProducts() {
+    const container = document.getElementById('catalogContainer')
+    if (!container) return
+
     const sortBy = document.getElementById('sortSelect')?.value || 'name';
     const sorted = [...allProducts];
     if (sortBy === 'price_asc') {
@@ -113,7 +122,7 @@ function sortProducts() {
     } else {
         sorted.sort((a, b) => a.name.localeCompare(b.name));
     }
-    renderProducts(sorted);
+    renderProducts(sorted, container);
 }
 
 // ============ ОТПРАВКА ЗАЯВКИ ============

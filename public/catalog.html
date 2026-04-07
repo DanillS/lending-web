@@ -17,19 +17,6 @@
                 </div>
                 <span class="logo-text">Качественные двери</span>
             </a>
-            <ul class="nav-links">
-                <li><a href="/#services">Услуги</a></li>
-                <li><a href="/catalog.html">Каталог</a></li>
-                <li><a href="/#advantages">Преимущества</a></li>
-                <li><a href="/#contact">Контакты</a></li>
-            </ul>
-            <button class="mobile-menu-btn" id="menuToggle">☰</button>
-        </div>
-        <div class="mobile-nav" id="mobileNav">
-            <a href="/">Главная</a>
-            <a href="/#services">Услуги</a>
-            <a href="/catalog.html">Каталог</a>
-            <a href="/#contact">Связаться</a>
         </div>
     </header>
 
@@ -47,16 +34,12 @@
                 <button class="filter-btn" data-category="interior" onclick="filterByCategory('interior')">Межкомнатные</button>
                 <button class="filter-btn" data-category="entrance" onclick="filterByCategory('entrance')">Входные</button>
                 <button class="filter-btn" data-category="glass" onclick="filterByCategory('glass')">Со стеклом</button>
-            </div>
-            
-            <div class="sort-box">
                 <select id="sortSelect" class="sort-select" onchange="sortProducts()">
                     <option value="name">По названию</option>
                     <option value="price_asc">Сначала дешевле</option>
                     <option value="price_desc">Сначала дороже</option>
                 </select>
-            </div>
-            
+            </div>     
             <div id="catalogContainer" class="catalog-grid">
                 <div style="text-align:center; padding:40px">Загрузка каталога...</div>
             </div>
