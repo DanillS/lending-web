@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог дверей | Качественные двери</title>
+    <meta name="description"
+        content="Более 50 моделей межкомнатных дверей. Цены от 12 900 ₽. Фото, характеристики, отзывы.">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Каталог межкомнатных дверей">
+    <meta property="og:description" content="Более 50 моделей межкомнатных дверей. Цены от 12 900 ₽. Доставка по Казани.">
+    <meta property="og:image" content="https://ваш-сайт.ru/images/12.webp">
+    <meta property="og:url" content="https://ваш-сайт.ru/catalog">
+    <meta property="og:type" content="website">
+
+    <link rel="icon" type="image/webp" href="icons/icon.webp">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -31,8 +42,6 @@
             
             <div class="filters">
                 <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">Все</button>
-                <button class="filter-btn" data-category="interior" onclick="filterByCategory('interior')">Межкомнатные</button>
-                <button class="filter-btn" data-category="entrance" onclick="filterByCategory('entrance')">Входные</button>
                 <button class="filter-btn" data-category="glass" onclick="filterByCategory('glass')">Со стеклом</button>
                 <select id="sortSelect" class="sort-select" onchange="sortProducts()">
                     <option value="name">По названию</option>

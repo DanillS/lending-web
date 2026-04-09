@@ -10,7 +10,19 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '30d',
+    etag: true,
+    lastModified: true
+}));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
+
+app.get('/catalog', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'catalog.html'))
+})
 
 // ============ TELEGRAM НАСТРОЙКА ============
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
