@@ -308,6 +308,12 @@ body {
     box-shadow: 0 20px 30px rgba(0,0,0,0.1);
 }
 
+.product-info-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .product-img {
     height: 240px;
     background-size: contain;
@@ -321,6 +327,7 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
+    margin-top: auto;
 }
 
 .product-title {
@@ -348,6 +355,68 @@ body {
     font-size: 0.85rem;
     margin: 8px 0;
     margin-bottom: 20px;
+}
+
+/* ========== ХАРАКТЕРИСТИКИ И ПЕРЕКЛЮЧЕНИЕ КАРТОЧЕК ========== */
+
+.product-specs-block {
+    padding: 20px;
+    background: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.specs-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #c4a484;
+    display: inline-block;
+    color: #1e1e2a;
+}
+
+.specs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 5px;
+}
+
+.spec-row {
+    display: flex;
+    font-size: 0.85rem;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.spec-key {
+    width: 40%;
+    font-weight: 600;
+    color: #5b6e7c;
+}
+
+.spec-value {
+    width: 60%;
+    color: #1e1e2a;
+}
+
+.specs-empty {
+    text-align: center;
+    color: #9ca3af;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+}
+
+.specs-list {
+    flex: 1;
+}
+
+.product-info-block,
+.product-specs-block {
+    transition: opacity 0.2s ease;
 }
 
 #advantages {

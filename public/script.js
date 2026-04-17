@@ -16,32 +16,6 @@ async function loadCatalog() {
     }
 }
 
-function renderProducts(products, container) {
-    if (!container) return;
-    
-    if (!products || products.length === 0) {
-        container.innerHTML = '<p style="text-align:center">Товары не найдены</p>';
-        return;
-    }
-    
-    container.innerHTML = products.map(product => `
-        <div class="product-card">
-            <div class="product-img" style="background-image: url('${product.image || '/images/placeholder.jpg'}')"></div>
-            <div class="product-info">
-                <div class="product-title">${escapeHtml(product.name)}</div>
-                <div class="product-price">
-                    ${formatPrice(product.price)} ₽
-                    ${product.oldPrice ? `<span class="product-old-price">${formatPrice(product.oldPrice)} ₽</span>` : ''}
-                </div>
-                <div class="product-desc">${escapeHtml(product.description)}</div>
-                <div style="margin-bottom: 5px;margin-top: auto; text-align: center;">
-                    <button class="btn btn-sm btn-dark" onclick="openOrderForm('${escapeHtml(product.name)}')">Заказать</button>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
 async function loadPopularProducts() {
     const container = document.getElementById('popularContainer')
     if (!container) return 
@@ -58,6 +32,62 @@ async function loadPopularProducts() {
     }
 }
 
+function renderSpecs(specs) {
+    if (!specs || Object.keys(specs).length === 0) {
+        return '<div class="specs-empty">Характеристики отсутствуют</div>';
+    }
+
+    let html = '<div class="specs-grid">'
+
+    for (const [key, value] of Object.entries(specs)) {
+        html += `
+            <div class="spec-row">
+                <div class="spec-key">${escapeHtml(key)}</div>
+                <div class="spec-value">${escapeHtml(value)}</div>
+            </div>
+        `
+    }
+
+    html += '</div>'
+
+    return html
+}
+
+function renderProducts(products, container) {
+    if (!container) return;
+    
+    if (!products || products.length === 0) {
+        container.innerHTML = '<p style="text-align:center">Товары не найдены</p>';
+        return;
+    }
+    
+    container.innerHTML = products.map(product => `
+        <div class="product-card">
+            <div class="product-info-block">
+                <div class="product-img" style="background-image: url('${product.image || '/images/placeholder.jpg'}')"></div>
+                <div class="product-info">
+                    <div class="product-title">${escapeHtml(product.name)}</div>
+                    <div class="product-price">
+                        ${formatPrice(product.price)} ₽
+                        ${product.oldPrice ? `<span class="product-old-price">${formatPrice(product.oldPrice)} ₽</span>` : ''}
+                    </div>
+                    <div class="product-desc">${escapeHtml(product.description)}</div>
+                    <div style="margin-bottom: 5px;margin-top: auto; text-align: center;">
+                        <button class="btn btn-sm btn-dark" onclick="openOrderForm('${escapeHtml(product.name)}')">Заказать</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-specs-block" style="display: none;">
+                <div class="specs-title">Характеристики</div>
+                <div class="specs-list">
+                    ${renderSpecs(product.specs)}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
 function formatPrice(price) {
     return new Intl.NumberFormat('ru-RU').format(price);
 }
@@ -70,6 +100,41 @@ function escapeHtml(str) {
         if (m === '>') return '&gt;';
         return m;
     });
+}
+
+function initCardHandlers() {
+    const catalogContainer = document.getElementById('catalogContainer')
+    if (catalogContainer) {
+        catalogContainer.removeEventListener('click', ToggleCardClick)
+        catalogContainer.addEventListener('click', ToggleCardClick)
+    }
+
+    const popularContainer = document.getElementById('popularContainer')
+    if (popularContainer) {
+        popularContainer.removeEventListener('click', ToggleCardClick)
+        popularContainer.addEventListener('click', ToggleCardClick)
+    }
+}
+
+function ToggleCardClick(event) {
+    const card = event.target.closest('.product-card')
+    if (!card) return 
+
+    if (event.target.closest('.btn-dark')) return 
+
+    const infoBlock = card.querySelector('.product-info-block')
+    const specsBlock = card.querySelector('.product-specs-block')
+
+    if (!infoBlock || !specsBlock) return
+
+    if (infoBlock.style.display !== 'none') {
+        infoBlock.style.display = 'none'
+        specsBlock.style.display = 'block'
+    } else {
+        infoBlock.style.display = 'block'
+        specsBlock.style.display = 'none'
+    }
+
 }
 
 // ============ ФИЛЬТРАЦИЯ ============
@@ -91,6 +156,8 @@ function filterByCategory(category) {
             btn.classList.add('active');
         }
     });
+
+    initCardHandlers()
 }
 
 function searchProducts() {
@@ -107,6 +174,8 @@ function searchProducts() {
         p.description.toLowerCase().includes(query)
     );
     renderProducts(filtered, container);
+
+    initCardHandlers()
 }
 
 function sortProducts() {
@@ -123,6 +192,8 @@ function sortProducts() {
         sorted.sort((a, b) => a.name.localeCompare(b.name));
     }
     renderProducts(sorted, container);
+
+    initCardHandlers()
 }
 
 // ============ ОТПРАВКА ЗАЯВКИ ============
@@ -219,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPopularProducts()
     
     initMobileMenu();
+    initCardHandlers()
     
     const orderForm = document.getElementById('orderForm');
     if (orderForm) {
