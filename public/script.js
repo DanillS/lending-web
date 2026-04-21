@@ -9,7 +9,7 @@ async function loadCatalog() {
         const response = await fetch('/api/products');
         const data = await response.json();
         allProducts = data.products || data;
-        renderProducts(allProducts, container);
+        renderFilteredAndSorted()
     } catch (error) {
         console.error('Ошибка загрузки каталога:', error);
         container.innerHTML = '<p style="text-align:center">Ошибка загрузки каталога</p>';
@@ -139,15 +139,7 @@ function ToggleCardClick(event) {
 
 // ============ ФИЛЬТРАЦИЯ ============
 function filterByCategory(category) {
-    const container = document.getElementById('catalogContainer')
-    if (!container) return
-
-    if (category === 'all') {
-        renderProducts(allProducts, container);
-    } else {
-        const filtered = allProducts.filter(p => p.category === category);
-        renderProducts(filtered, container);
-    }
+    currentCategory = category
     
     // Активная кнопка
     document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -157,41 +149,57 @@ function filterByCategory(category) {
         }
     });
 
-    initCardHandlers()
+    renderFilteredAndSorted()
 }
 
 function searchProducts() {
-    const container = document.getElementById('catalogContainer')
-    if (!container) return
+    const searchInput = document.getElementById('searchInput')
+    if (!searchInput) return
 
-    const query = document.getElementById('searchInput')?.value.toLowerCase() || '';
-    if (!query) {
-        renderProducts(allProducts, container);
-        return;
-    }
-    const filtered = allProducts.filter(p => 
-        p.name.toLowerCase().includes(query) || 
-        p.description.toLowerCase().includes(query)
-    );
-    renderProducts(filtered, container);
-
-    initCardHandlers()
+    currentSearchQuery = searchInput.value
+    renderFilteredAndSorted()
 }
 
 function sortProducts() {
+    const sortSelect = document.getElementById('sortSelect')
+
+    if (!sortSelect) return
+
+    currentSort = sortSelect.value
+
+    renderFilteredAndSorted()
+}
+
+let currentCategory = 'all'
+let currentSort = 'name'
+let currentSearchQuery = ''
+
+function renderFilteredAndSorted() {
     const container = document.getElementById('catalogContainer')
     if (!container) return
 
-    const sortBy = document.getElementById('sortSelect')?.value || 'name';
-    const sorted = [...allProducts];
-    if (sortBy === 'price_asc') {
-        sorted.sort((a, b) => a.price - b.price);
-    } else if (sortBy === 'price_desc') {
-        sorted.sort((a, b) => b.price - a.price);
-    } else {
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
+    let result = [...allProducts];
+
+    if (currentCategory !== 'all') {
+        result = result.filter(product => product.category === currentCategory)
     }
-    renderProducts(sorted, container);
+
+    if (currentSearchQuery.trim() !== '') {
+        const query = currentSearchQuery.toLowerCase()
+        result = result.filter(product =>
+            product.name.toLowerCase().includes(query) ||
+            product.description.toLowerCase().includes(query)
+        )
+    }
+
+    if (currentSort === 'price_asc') {
+        result.sort((a, b) => a.price - b.price)
+    } else if (currentSort === 'price_desc') {
+        result.sort((a, b) => b.price - a.price);
+    } else {
+        result.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    renderProducts(result, container);
 
     initCardHandlers()
 }
