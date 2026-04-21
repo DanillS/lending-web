@@ -26,6 +26,7 @@ async function loadPopularProducts() {
         const products = data.products || data
         const popular = products.filter(p => p.popular === true)
         renderProducts(popular, container)
+        initCardHandlers()
     } catch (error) {
         console.error('Ошибка загрузки популярных:', error)
         container.innerHTML = '<p style="text-align: center">Ошибка загрузки</p>'
@@ -298,10 +299,14 @@ document.addEventListener('DOMContentLoaded', () => {
         loadPopularProducts()
     
     initMobileMenu();
-    initCardHandlers()
     
     const orderForm = document.getElementById('orderForm');
     if (orderForm) {
         orderForm.addEventListener('submit', submitOrder);
+    }
+
+    const searchInput = document.getElementById('searchInput')
+    if (searchInput) {
+        searchInput.addEventListener('input', searchProducts)
     }
 });
