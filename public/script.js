@@ -84,6 +84,9 @@ function renderProducts(products, container) {
                 <div class="specs-list">
                     ${renderSpecs(product.specs)}
                 </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button class="btn btn-sm btn-dark" onclick="openOrderForm('${escapeHtml(product.name)}')">Заказать</button>
+                </div>
             </div>
         </div>
     `).join('');
