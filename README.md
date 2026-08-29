@@ -6,8 +6,7 @@
 
 ```bash
 cp .env.example .env
-# задайте SECRET_KEY и ADMIN_PASSWORD — не оставляйте changeme
-chmod +x infra/backup.sh
+chmod +x infra/*.sh
 docker compose -f infra/docker-compose.yml up --build
 ```
 
@@ -15,29 +14,56 @@ docker compose -f infra/docker-compose.yml up --build
 
 - Витрина: `/`, `/catalog`, карточка `/product/[slug]`
 - Корзина и заявка: `/cart`, `/checkout`
-- Админка: `/admin` (логин из `ADMIN_EMAIL` / `ADMIN_PASSWORD`)
+- Админка: `/admin` (логин из `ADMIN_EMAIL` / `ADMIN_PASSWORD`). PWA: в шапке «Включить уведомления»; на iPhone сначала «На экран Домой».
+- Живость: `/health` · готовность (Postgres + Redis): `/health/ready`
 
-Первый старт API сам накатывает схему, создаёт админа и загружает 73 двери из `data/products.json`.
+Первый старт API накатывает Alembic, создаёт админа и загружает 73 двери из `data/products.json`.
 
-## Деплой на сервер
+## Деплой на VPS (не Vercel)
 
-1. Скопируйте репозиторий на VPS (Docker + Compose).
-2. Создайте `.env` из `.env.example` и замените:
-   - `SECRET_KEY` — длинная случайная строка
-   - `ADMIN_PASSWORD` — свой пароль
-   - `POSTGRES_PASSWORD`
-   - `SITE_URL` и `NEXT_PUBLIC_SITE_URL` — `https://ваш-домен`
-   - `CORS_ORIGINS` — тот же домен (без слеша в конце)
-3. Соберите и запустите:
+Стек — Docker Compose. На Vercel он не встанет: нужны Postgres, Redis и FastAPI. Домен (`elite-doors.shop`) должен смотреть A-записью на IP VPS, не на Vercel.
+
+1. Ubuntu VPS, Docker + Compose v2.24+, Caddy.
+2. Клон в `/opt/lending-web`, `.env` из `.env.example`.
+3. Секреты:
 
 ```bash
-docker compose -f infra/docker-compose.yml up -d --build
+./infra/gen-secrets.sh
 ```
 
-4. Повесьте HTTPS перед контейнером (Caddy/Nginx/Cloudflare) на порт 80 контейнера nginx или смените проброс на 127.0.0.1:80 и терминируйте TLS на хосте.
-5. После смены домена пересоберите `web`, чтобы sitemap и Open Graph взяли `NEXT_PUBLIC_SITE_URL`.
-6. Cron бэкапа: `0 3 * * * /path/to/lending-web/infra/backup.sh`
-7. Telegram/email опциональны: заявка пишется в админку даже без них.
+В `.env` на сервере:
+
+- `APP_ENV=production`
+- `SECRET_KEY`, `ADMIN_PASSWORD`, `POSTGRES_PASSWORD` — из скрипта, не дефолты
+- `SITE_URL` и `NEXT_PUBLIC_SITE_URL` — `https://elite-doors.shop`
+- `CORS_ORIGINS` — тот же домен без слеша
+- `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` — иначе заявки только в админке и в PWA-пуше
+
+4. Стек (nginx только на `127.0.0.1:8080`):
+
+```bash
+./infra/deploy.sh
+```
+
+Или вручную:
+
+```bash
+docker compose -f infra/docker-compose.yml -f infra/docker-compose.prod.yml up -d --build
+```
+
+5. HTTPS на хосте (Let's Encrypt сам):
+
+```bash
+export SITE_DOMAIN=elite-doors.shop
+caddy run --config /opt/lending-web/infra/Caddyfile
+```
+
+Caddy слушает 443 и проксирует на `127.0.0.1:8080`. Порт 80 контейнера в интернет не публикуется.
+
+6. Файрвол: `sudo ./infra/ufw.sh` (SSH + 80/443, без публикации Compose `:80`).
+7. После смены `NEXT_PUBLIC_SITE_URL` обязательно пересобрать `web` (это делает `deploy.sh`) — sitemap и Open Graph запекаются в билд.
+8. Cron бэкапа: `0 3 * * * /opt/lending-web/infra/backup.sh`
+9. Внешний пинг (Uptime Kuma / healthchecks.io) на `https://домен/health/ready`, алерт в Telegram.
 
 Фото дверей сейчас лёгкие webp 280–360 px из старого каталога. Перед продакшеном лучше залить нормальные кадры через админку (webp/jpeg/png до 5 МБ).
 
@@ -64,18 +90,34 @@ INTERNAL_API_URL=http://localhost:8000 npm run dev
 ## Тесты
 
 ```bash
-cd apps/api && pytest
+cd apps/api && pip install -r requirements-dev.txt && pytest
 cd apps/web && npm test
+# E2E, стек уже на :80
+cd apps/web && E2E_BASE_URL=http://localhost npx playwright install chromium && npm run test:e2e
+# Нагрузка (не в CI)
+pip install locust && locust -f infra/locustfile.py --headless -u 20 -r 5 -t 30s --host http://localhost
 ```
 
-## Бэкап Postgres
+CI: lint (ruff) → unit + coverage ≥80% (utils/config/logging) → integration (Postgres+Redis) → Trivy + Gitleaks. CodeQL отдельно. Dependabot — weekly.
 
-```bash
-./infra/backup.sh
-```
-
-Дамп появится в `backups/`.
+Документы: [как устроена инженерия](docs/ENGINEERING.md), [архитектура](docs/ARCHITECTURE.md), [API](docs/API.md), [runbook](docs/RUNBOOK.md), [откат](docs/ROLLBACK.md), [MCP](docs/MCP.md), [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Массовые цены
 
-В админке отметьте двери или включите «все по фильтру», укажите процент от **базовой** цены, нажмите «Превью», затем «Применить». «Отменить последний пересчёт» откатывает `current_price`.
+```bash
+./infra/backup.sh
+# опционально наружу:
+# BACKUP_REMOTE=user@host:/backups/doors ./infra/backup.sh
+```
+
+Пишет `backups/doors-*.sql.gz` и `backups/uploads-*.tar.gz`, старше 14 дней удаляет (`BACKUP_KEEP_DAYS`).
+
+Проверка restore на копии:
+
+```bash
+./infra/restore.sh backups/doors-YYYYMMDD-HHMMSS.sql.gz backups/uploads-YYYYMMDD-HHMMSS.tar.gz
+```
+
+## Массовые цены
+
+В админке отметьте двери или включите «все по фильтру», укажите процент от **базовой** цены — список «Будет обновлено» меняется сразу, затем нажмите «Применить». «Отменить последний пересчёт» откатывает `current_price`.

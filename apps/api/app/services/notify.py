@@ -4,11 +4,13 @@ import logging
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import Any
 
 import httpx
 
 from app.config import get_settings
 from app.models import Order
+from app.services import push as push_svc
 from app.utils import html_escape
 
 logger = logging.getLogger(__name__)
@@ -43,7 +45,7 @@ def _order_telegram(order: Order) -> str:
     )
 
 
-async def notify_order(order: Order) -> None:
+async def notify_order(order: Order, db: Any | None = None) -> None:
     text = _order_telegram(order)
     html = _order_html(order)
     if settings.telegram_bot_token and settings.telegram_chat_id:
@@ -79,3 +81,12 @@ async def notify_order(order: Order) -> None:
             logger.exception("Email send failed")
     else:
         logger.info("Email is not configured, skip")
+
+    if db is None:
+        return
+    try:
+        await push_svc.notify_new_order(db, order)
+        await db.commit()
+    except Exception:
+        logger.exception("Web push send failed")
+        await db.rollback()

@@ -18,4 +18,6 @@ def test_service_map():
 def test_size_surcharge():
     assert leaf_size_surcharge(4050, "800x2000") == 0
     assert leaf_size_surcharge(4050, "600x2000") == 0
+    assert leaf_size_surcharge(4050, "700x2000") == 0
     assert leaf_size_surcharge(4050, "900x2000") == max(500, round(4050 * 0.12))
+    assert leaf_size_surcharge(1000, "900x2000") == 500

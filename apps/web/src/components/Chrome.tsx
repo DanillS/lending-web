@@ -1,40 +1,16 @@
 "use client";
 
 import { useCart } from "@/lib/cart";
-import { debugLog } from "@/lib/debug";
 import { SiteInfo } from "@/lib/types";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function Header({ site }: { site: SiteInfo }) {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    // #region agent log
-    const labels = Array.from(document.querySelectorAll("a, button")).map((el) => el.textContent?.replace(/\s+/g, " ").trim() || "");
-    debugLog(
-      "Chrome.tsx:home",
-      "order now CTA",
-      {
-        path: window.location.pathname,
-        inServices: Array.from(document.querySelectorAll("#services a, #services button")).some(
-          (el) => el.textContent?.trim() === "Заказать сейчас",
-        ),
-        anywhere: labels.includes("Заказать сейчас"),
-      },
-      "A",
-      "remove-cta",
-    );
-    // #endregion
-  }, []);
-
   function toggleMenu() {
-    setOpen((value) => {
-      const next = !value;
-      debugLog("Chrome.tsx:menu", "mobile menu", { open: next, cartCount: count }, "B");
-      return next;
-    });
+    setOpen((value) => !value);
   }
 
   return (
@@ -55,8 +31,21 @@ export function Header({ site }: { site: SiteInfo }) {
           <a href={`tel:${site.phone.replace(/[^\d+]/g, "")}`} className="hidden text-sm font-semibold lg:block">
             {site.phone}
           </a>
-          <Link href="/cart" className="btn btn-outline !px-4 !py-2 text-sm whitespace-nowrap sm:!px-5 sm:!py-2.5">
-            Корзина{count ? ` · ${count}` : ""}
+          <Link
+            href="/cart"
+            className="relative flex h-11 w-11 items-center justify-center rounded-full bg-wash text-dark"
+            aria-label={count ? `Корзина, товаров: ${count}` : "Корзина"}
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+              <path d="M6 7h15l-1.4 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.6L5 4H2" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="9" cy="20" r="1.3" fill="currentColor" stroke="none" />
+              <circle cx="18" cy="20" r="1.3" fill="currentColor" stroke="none" />
+            </svg>
+            {count ? (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-dark px-1 text-[10px] font-semibold leading-none text-white">
+                {count}
+              </span>
+            ) : null}
           </Link>
           <button
             type="button"

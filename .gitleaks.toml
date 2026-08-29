@@ -1,0 +1,8 @@
+title = "lending-web"
+
+[allowlist]
+description = "Example env and docs"
+paths = [
+  '''\.env\.example$''',
+  '''docs/''',
+]

@@ -1,0 +1,8 @@
+# Host Caddy in front of Compose nginx (127.0.0.1:8080).
+# Install: https://caddyserver.com/docs/install
+# SITE_DOMAIN=elite-doors.shop caddy run --config /opt/lending-web/infra/Caddyfile
+
+{$SITE_DOMAIN:elite-doors.shop} {
+	encode gzip
+	reverse_proxy 127.0.0.1:8080
+}

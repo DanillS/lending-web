@@ -6,24 +6,29 @@ from pathlib import Path
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Cookie, Depends, File, HTTPException, Query, Response, UploadFile
-from sqlalchemy import select
+from fastapi import APIRouter, Cookie, Depends, File, HTTPException, Query, Request, Response, UploadFile
+from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.config import get_settings
 from app.db import get_db
-from app.models import Order, Product, ProductImage, ProductType, User
+from app.models import Order, OrderStatus, Product, ProductImage, ProductType, User
 from app.schemas import (
     BulkApplyOut,
     BulkPreviewOut,
     BulkPriceIn,
+    LastBatchOut,
     LoginIn,
+    UndoIn,
     OrderOut,
     OrderStatusIn,
     ProductCardOut,
     ProductListOut,
     ProductWrite,
+    PushSubscribeIn,
+    PushUnsubscribeIn,
 )
 from app.security import (
     REFRESH_COOKIE,
@@ -33,16 +38,59 @@ from app.security import (
     set_auth_cookies,
     verify_password,
 )
-from app.services import catalog, prices
+from app.services import cache, catalog, prices, push
 from app.utils import slugify
+
+
+def _spec_columns(specs: dict | None) -> dict:
+    specs = specs or {}
+    return {
+        "brand": specs.get("Производитель"),
+        "manufacturer": specs.get("Производитель"),
+        "covering": specs.get("Покрытие"),
+        "glass_type": specs.get("Вид стекла"),
+        "style": specs.get("Стиль оформления"),
+        "opening_system": specs.get("Система открывания"),
+    }
+
 
 router = APIRouter(prefix="/api/v1/admin", tags=["admin"])
 settings = get_settings()
-ALLOWED_MIME = {"image/webp", "image/jpeg", "image/png"}
+MIME_EXT = {
+    "image/webp": ".webp",
+    "image/jpeg": ".jpg",
+    "image/jpg": ".jpg",
+    "image/pjpeg": ".jpg",
+    "image/png": ".png",
+    "image/x-png": ".png",
+}
+
+
+def _image_ext(content_type: str | None, content: bytes) -> str:
+    mime = (content_type or "").lower().split(";")[0].strip()
+    if mime in MIME_EXT:
+        return MIME_EXT[mime]
+    if content[:3] == b"\xff\xd8\xff":
+        return ".jpg"
+    if content[:8] == b"\x89PNG\r\n\x1a\n":
+        return ".png"
+    if len(content) >= 12 and content[:4] == b"RIFF" and content[8:12] == b"WEBP":
+        return ".webp"
+    raise HTTPException(status_code=400, detail="Только webp, jpeg, png")
+
+
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+    if forwarded:
+        return forwarded
+    return request.client.host if request.client else "unknown"
 
 
 @router.post("/login")
-async def login(payload: LoginIn, response: Response, db: AsyncSession = Depends(get_db)) -> dict:
+async def login(payload: LoginIn, request: Request, response: Response, db: AsyncSession = Depends(get_db)) -> dict:
+    ip = _client_ip(request)
+    if await cache.rate_limited(f"login:{ip}", limit=10, window_sec=900):
+        raise HTTPException(status_code=429, detail="Слишком много попыток входа, подождите")
     user = await db.scalar(select(User).where(User.email == payload.email.lower().strip()))
     if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Неверный логин или пароль")
@@ -102,6 +150,7 @@ async def create_product(
 ) -> ProductCardOut:
     slug = payload.slug or slugify(payload.name)
     sku = payload.sku or f"SKU-{uuid.uuid4().hex[:8].upper()}"
+    cols = _spec_columns(payload.specs)
     product = Product(
         sku=sku,
         slug=slug,
@@ -109,13 +158,13 @@ async def create_product(
         name=payload.name,
         series=payload.series,
         description=payload.description,
-        brand=payload.brand,
-        manufacturer=payload.manufacturer,
+        brand=payload.brand or cols["brand"],
+        manufacturer=payload.manufacturer or cols["manufacturer"],
         category=payload.category,
-        covering=payload.covering,
-        glass_type=payload.glass_type,
-        style=payload.style,
-        opening_system=payload.opening_system,
+        covering=payload.covering or cols["covering"],
+        glass_type=payload.glass_type or cols["glass_type"],
+        style=payload.style or cols["style"],
+        opening_system=payload.opening_system or cols["opening_system"],
         specs=payload.specs,
         base_price=payload.base_price,
         current_price=payload.current_price if payload.current_price is not None else payload.base_price,
@@ -126,8 +175,15 @@ async def create_product(
         seo_description=payload.seo_description,
     )
     db.add(product)
-    await db.commit()
-    await db.refresh(product)
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        raise HTTPException(status_code=400, detail="Товар с таким названием или артикулом уже есть")
+    except Exception:
+        await db.rollback()
+        raise
+    product = await catalog.get_by_id(db, product.id)
     return ProductCardOut.model_validate(product)
 
 
@@ -162,6 +218,11 @@ async def update_product(
         data.pop("current_price", None)
     for key, value in data.items():
         setattr(product, key, value)
+    if "specs" in data:
+        cols = _spec_columns(product.specs)
+        for key, value in cols.items():
+            if key not in data or data.get(key) is None:
+                setattr(product, key, value)
     await db.commit()
     product = await catalog.get_by_id(db, product_id)
     return ProductCardOut.model_validate(product)
@@ -192,12 +253,10 @@ async def upload_image(
     product = await catalog.get_by_id(db, product_id)
     if not product:
         raise HTTPException(status_code=404, detail="Не найдено")
-    if file.content_type not in ALLOWED_MIME:
-        raise HTTPException(status_code=400, detail="Только webp, jpeg, png")
     content = await file.read()
     if len(content) > 5 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="Файл больше 5 МБ")
-    ext = {"image/webp": ".webp", "image/jpeg": ".jpg", "image/png": ".png"}[file.content_type]
+    ext = _image_ext(file.content_type, content)
     name = f"{uuid.uuid4().hex}{ext}"
     folder = Path(settings.upload_dir)
     folder.mkdir(parents=True, exist_ok=True)
@@ -229,14 +288,67 @@ async def price_apply(
     return BulkApplyOut(batch_id=batch.id, updated=batch.product_count)
 
 
+@router.get("/prices/last", response_model=LastBatchOut)
+async def price_last(
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+    product_ids: Annotated[list[UUID] | None, Query()] = None,
+) -> LastBatchOut:
+    return await prices.last_undoable(db, product_ids or None)
+
+
 @router.post("/prices/undo")
 async def price_undo(
+    payload: UndoIn,
     user: Annotated[User, Depends(get_current_user)],
     db: AsyncSession = Depends(get_db),
 ) -> dict:
-    count = await prices.undo_last(db, user.id)
+    count = await prices.undo_last(db, user.id, payload.product_ids or None)
     await db.commit()
     return {"restored": count}
+
+
+@router.get("/push/vapid")
+async def push_vapid(
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    keys = await push.load_vapid(db)
+    await db.commit()
+    return {"public_key": keys["public"]}
+
+
+@router.post("/push/subscribe")
+async def push_subscribe(
+    payload: PushSubscribeIn,
+    request: Request,
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    await push.subscribe(db, user.id, payload, request.headers.get("user-agent"))
+    await db.commit()
+    return {"ok": True}
+
+
+@router.post("/push/unsubscribe")
+async def push_unsubscribe(
+    payload: PushUnsubscribeIn,
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    await push.unsubscribe(db, user.id, payload.endpoint)
+    await db.commit()
+    return {"ok": True}
+
+
+@router.post("/push/test")
+async def push_test(
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    sent = await push.send_test(db, user.id)
+    await db.commit()
+    return {"sent": sent}
 
 
 @router.get("/orders", response_model=list[OrderOut])
@@ -248,6 +360,27 @@ async def list_orders(
         await db.scalars(select(Order).options(selectinload(Order.items)).order_by(Order.created_at.desc()).limit(200))
     ).all()
     return [OrderOut.model_validate(row) for row in rows]
+
+
+@router.get("/orders/stats")
+async def order_stats(
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    new_count = await db.scalar(select(func.count()).select_from(Order).where(Order.status == OrderStatus.new))
+    return {"new_count": int(new_count or 0)}
+
+
+@router.get("/orders/{order_id}", response_model=OrderOut)
+async def get_order(
+    order_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> OrderOut:
+    order = await db.scalar(select(Order).options(selectinload(Order.items)).where(Order.id == order_id))
+    if not order:
+        raise HTTPException(status_code=404, detail="Не найдено")
+    return OrderOut.model_validate(order)
 
 
 @router.patch("/orders/{order_id}", response_model=OrderOut)
@@ -264,3 +397,19 @@ async def patch_order(
     await db.commit()
     await db.refresh(order)
     return OrderOut.model_validate(order)
+
+
+@router.delete("/orders/{order_id}")
+async def delete_order(
+    order_id: UUID,
+    user: Annotated[User, Depends(get_current_user)],
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    order = await db.scalar(select(Order).where(Order.id == order_id))
+    if not order:
+        raise HTTPException(status_code=404, detail="Не найдено")
+    if order.status != OrderStatus.closed:
+        raise HTTPException(status_code=400, detail="Удалить можно только закрытую заявку")
+    await db.delete(order)
+    await db.commit()
+    return {"deleted": True}

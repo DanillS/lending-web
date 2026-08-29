@@ -1,3 +1,9 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -12,6 +18,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    logging: *default-logging
     restart: unless-stopped
 
   redis:
@@ -24,6 +31,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    logging: *default-logging
     restart: unless-stopped
 
   api:
@@ -39,8 +47,6 @@ services:
       - api_uploads:/app/uploads
       - ../data:/app/data:ro
       - ../public/images:/app/static_images:ro
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,6 +57,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    logging: *default-logging
     restart: unless-stopped
 
   web:
@@ -66,6 +73,7 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    logging: *default-logging
     restart: unless-stopped
 
   nginx:
@@ -81,6 +89,7 @@ services:
     depends_on:
       - api
       - web
+    logging: *default-logging
     restart: unless-stopped
 
 volumes:

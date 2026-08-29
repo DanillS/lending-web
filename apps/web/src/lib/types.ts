@@ -102,5 +102,12 @@ export type Order = {
   comment: string;
   total_snapshot: number;
   created_at: string;
-  items: { id: string; title: string; quantity: number; unit_price: number; line_total: number }[];
+  items: {
+    id: string;
+    title: string;
+    quantity: number;
+    unit_price: number;
+    line_total: number;
+    config_json?: Record<string, unknown>;
+  }[];
 };

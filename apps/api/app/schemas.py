@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Any, Literal
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -227,6 +227,25 @@ class BulkApplyOut(BaseModel):
     updated: int
 
 
+class LastBatchRow(BaseModel):
+    id: uuid.UUID
+    name: str
+    current_price: int
+    restore_price: int
+
+
+class LastBatchOut(BaseModel):
+    percent: int
+    count: int
+    batch_count: int
+    filtered: bool
+    rows: list[LastBatchRow]
+
+
+class UndoIn(BaseModel):
+    product_ids: list[uuid.UUID] = []
+
+
 class OrderStatusIn(BaseModel):
     status: OrderStatus
 
@@ -240,3 +259,24 @@ class SitePublicOut(BaseModel):
     city: str
     reviews: list[dict[str, str]]
     faq: list[dict[str, str]]
+
+
+class PushKeysIn(BaseModel):
+    p256dh: str = Field(min_length=20, max_length=200)
+    auth: str = Field(min_length=8, max_length=200)
+
+
+class PushSubscribeIn(BaseModel):
+    endpoint: str = Field(min_length=20, max_length=2048)
+    keys: PushKeysIn
+
+    @field_validator("endpoint")
+    @classmethod
+    def https_endpoint(cls, value: str) -> str:
+        if not value.startswith("https://"):
+            raise ValueError("endpoint must be https")
+        return value
+
+
+class PushUnsubscribeIn(BaseModel):
+    endpoint: str = Field(min_length=20, max_length=2048)

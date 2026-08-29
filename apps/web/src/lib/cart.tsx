@@ -1,7 +1,6 @@
 "use client";
 
 import { apiGet } from "@/lib/api";
-import { debugLog } from "@/lib/debug";
 import { Cart } from "@/lib/types";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
@@ -22,7 +21,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const cart = await apiGet<Cart>("/api/v1/cart");
       setCount(cart.items.length);
       setTotal(cart.total);
-      debugLog("cart.tsx:refresh", "cart loaded", { count: cart.items.length, total: cart.total }, "B");
     } catch {
       setCount(0);
       setTotal(0);

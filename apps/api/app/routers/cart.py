@@ -105,35 +105,6 @@ async def checkout(
         raise HTTPException(status_code=429, detail="Слишком много заявок, подождите")
     cart = await _cart(request, db, create=True)
     _set_cart_cookie(response, cart.id)
-    # #region agent log
-    try:
-        import json
-        import time
-        import urllib.request
-
-        body = json.dumps(
-            {
-                "sessionId": "cbac7e",
-                "hypothesisId": "E",
-                "location": "cart.py:checkout",
-                "message": "order cart resolved",
-                "data": {"had_cookie": bool(request.cookies.get(CART_COOKIE)), "item_count": len(cart.items)},
-                "timestamp": int(time.time() * 1000),
-                "runId": "post-fix",
-            }
-        ).encode()
-        urllib.request.urlopen(
-            urllib.request.Request(
-                "http://host.docker.internal:7913/ingest/07fef8c1-beae-40f2-9ebd-1e2547266311",
-                data=body,
-                headers={"Content-Type": "application/json", "X-Debug-Session-Id": "cbac7e"},
-                method="POST",
-            ),
-            timeout=0.4,
-        )
-    except Exception:
-        pass
-    # #endregion
     try:
         order = await orders.create_order(db, cart, payload)
         await db.commit()
@@ -145,7 +116,7 @@ async def checkout(
 
     full = await db.scalar(select(Order).options(selectinload(Order.items)).where(Order.id == order.id))
     try:
-        await notify.notify_order(full or order)
+        await notify.notify_order(full or order, db)
     except Exception:
         pass
     return OrderOut.model_validate(full or order)

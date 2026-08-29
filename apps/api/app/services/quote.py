@@ -34,36 +34,6 @@ def leaf_size_surcharge(base_price: int, size: str) -> int:
     return 0
 
 
-def _agent_log(hypothesis_id: str, location: str, message: str, data: dict[str, Any]) -> None:
-    # #region agent log
-    try:
-        import json
-        import time
-        import urllib.request
-
-        payload = json.dumps(
-            {
-                "sessionId": "cbac7e",
-                "hypothesisId": hypothesis_id,
-                "location": location,
-                "message": message,
-                "data": data,
-                "timestamp": int(time.time() * 1000),
-                "runId": "post-fix",
-            }
-        ).encode()
-        req = urllib.request.Request(
-            "http://host.docker.internal:7913/ingest/07fef8c1-beae-40f2-9ebd-1e2547266311",
-            data=payload,
-            headers={"Content-Type": "application/json", "X-Debug-Session-Id": "cbac7e"},
-            method="POST",
-        )
-        urllib.request.urlopen(req, timeout=0.4)
-    except Exception:
-        pass
-    # #endregion
-
-
 @dataclass
 class _Line:
     sku: str
@@ -162,10 +132,4 @@ async def quote(db: AsyncSession, payload: QuoteRequest) -> QuoteResponse:
     if not is_door:
         config["kit"] = KitType.leaf_only.value
         config["hardware"] = HardwarePreset.none.value
-    _agent_log(
-        "C",
-        "quote.py:quote",
-        "quote computed",
-        {"is_door": is_door, "size": payload.size, "kit": config.get("kit"), "total": total, "lines": len(out_lines)},
-    )
     return QuoteResponse(lines=out_lines, total=total, config=config)

@@ -2,7 +2,6 @@
 
 import { apiGet, apiSend } from "@/lib/api";
 import { useCart } from "@/lib/cart";
-import { debugLog } from "@/lib/debug";
 import { formatPrice } from "@/lib/format";
 import { Product, Quote, QuoteConfig } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
@@ -118,12 +117,6 @@ function DoorKit({ product }: { product: Product }) {
         const data = await apiSend<Quote>("/api/v1/quote", "POST", payload);
         setQuote(data);
         setError("");
-        debugLog(
-          "Configurator.tsx:quote",
-          "quote result",
-          { size: payload.size, kit: payload.kit, hardware: payload.hardware, total: data.total, lines: data.lines.length },
-          "C",
-        );
       } catch (err) {
         setError(err instanceof Error ? err.message : "Ошибка расчёта");
       }

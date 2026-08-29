@@ -2,7 +2,6 @@
 
 import { apiSend } from "@/lib/api";
 import { useCart } from "@/lib/cart";
-import { debugLog } from "@/lib/debug";
 import { formatPrice } from "@/lib/format";
 import { Product } from "@/lib/types";
 import Link from "next/link";
@@ -29,11 +28,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   function toggle(event: React.MouseEvent) {
     if ((event.target as HTMLElement).closest("a, button")) return;
-    setFlipped((value) => {
-      const next = !value;
-      debugLog("ProductCard.tsx:toggle", "card flip", { slug: product.slug, flipped: next, type: product.type }, "A");
-      return next;
-    });
+    setFlipped((value) => !value);
   }
 
   async function addAccessory(event: React.MouseEvent) {
