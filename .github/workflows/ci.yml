@@ -20,7 +20,7 @@ jobs:
       - name: Lint
         run: ruff check app tests
       - name: Unit tests + coverage
-        run: pytest tests/test_utils.py tests/test_quote.py tests/test_config.py tests/test_logging.py tests/test_notify.py
+        run: pytest tests/test_utils.py tests/test_quote.py tests/test_config.py tests/test_logging.py tests/test_notify.py tests/test_dadata.py
 
   integration:
     runs-on: ubuntu-latest

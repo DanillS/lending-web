@@ -36,6 +36,8 @@ class Settings(BaseSettings):
     admin_phone: str = "79503101560"
     upload_dir: str = "uploads"
     sentry_dsn: str = ""
+    dadata_api_key: str = ""
+    dadata_secret: str = ""
 
     @property
     def cors_origin_list(self) -> list[str]:
@@ -56,6 +58,10 @@ class Settings(BaseSettings):
     @property
     def vapid_configured(self) -> bool:
         return bool(self.vapid_public_key and self.vapid_private_key)
+
+    @property
+    def dadata_configured(self) -> bool:
+        return bool(self.dadata_api_key)
 
     def validate_for_runtime(self) -> None:
         if not self.is_production:

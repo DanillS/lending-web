@@ -16,7 +16,7 @@ from app.config import get_settings
 from app.db import SessionLocal, engine
 from app.health import postgres_ok, redis_ok
 from app.logging import request_id_ctx, setup_logging
-from app.routers import admin, cart, catalog, meta
+from app.routers import admin, cart, catalog, meta, suggest
 from app.services.seed import seed
 
 settings = get_settings()
@@ -52,6 +52,8 @@ async def lifespan(_: FastAPI):
         logger.warning("TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID empty — new orders will not ping Telegram")
     if settings.is_production and not settings.vapid_configured:
         logger.warning("VAPID keys empty — web push keys will be stored in the database on first admin subscribe")
+    if settings.is_production and not settings.dadata_configured:
+        logger.warning("DADATA_API_KEY empty — address suggest and phone clean are off")
     yield
     await engine.dispose()
 
@@ -114,12 +116,14 @@ async def health_ready() -> JSONResponse:
         "redis": cache_ok,
         "telegram": settings.telegram_configured,
         "web_push": settings.vapid_configured,
+        "dadata": settings.dadata_configured,
     }
     return JSONResponse(payload, status_code=200 if db_ok and cache_ok else 503)
 
 
 app.include_router(catalog.router)
 app.include_router(cart.router)
+app.include_router(suggest.router)
 app.include_router(admin.router)
 app.include_router(meta.router)
 

@@ -130,6 +130,7 @@ class CartOut(BaseModel):
 class CheckoutIn(BaseModel):
     name: str = Field(min_length=2, max_length=80)
     phone: str = Field(min_length=10, max_length=32)
+    address: str = Field(default="", max_length=300)
     comment: str = Field(default="", max_length=2000)
     consent: bool
     honeypot: str = ""
@@ -156,6 +157,7 @@ class OrderOut(OrmModel):
     status: OrderStatus
     customer_name: str
     phone: str
+    address: str = ""
     comment: str
     total_snapshot: int
     created_at: datetime
@@ -250,6 +252,28 @@ class OrderStatusIn(BaseModel):
     status: OrderStatus
 
 
+class AddressSuggestIn(BaseModel):
+    query: str = Field(min_length=1, max_length=80)
+
+
+class AddressSuggestItem(BaseModel):
+    value: str
+    unrestricted_value: str = ""
+
+
+class AddressSuggestOut(BaseModel):
+    items: list[AddressSuggestItem]
+
+
+class PhoneNormalizeIn(BaseModel):
+    phone: str = Field(min_length=5, max_length=32)
+
+
+class PhoneNormalizeOut(BaseModel):
+    phone: str
+    valid: bool
+
+
 class SitePublicOut(BaseModel):
     name: str
     phone: str
@@ -259,6 +283,7 @@ class SitePublicOut(BaseModel):
     city: str
     reviews: list[dict[str, str]]
     faq: list[dict[str, str]]
+    dadata: bool = False
 
 
 class PushKeysIn(BaseModel):

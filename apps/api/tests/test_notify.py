@@ -8,6 +8,7 @@ def test_telegram_text_includes_number_and_phone():
         public_number="KZ-100",
         customer_name="Иван",
         phone="+79990001122",
+        address="г Казань, ул Баумана, д 1",
         comment="",
         total_snapshot=4500,
         items=[SimpleNamespace(title="Полотно", quantity=1, line_total=4500)],
@@ -16,3 +17,4 @@ def test_telegram_text_includes_number_and_phone():
     assert "KZ-100" in text
     assert "+79990001122" in text
     assert "Полотно" in text
+    assert "Баумана" in text

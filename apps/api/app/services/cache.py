@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import logging
 import uuid
+from typing import Any
 
 from redis.asyncio import Redis
 
@@ -41,3 +43,30 @@ async def rate_limited(key: str, limit: int, window_sec: int) -> bool:
 
 def new_id() -> str:
     return uuid.uuid4().hex
+
+
+async def get_json(key: str) -> Any | None:
+    client = await get_redis()
+    if client is None:
+        return None
+    try:
+        raw = await client.get(key)
+    except Exception:
+        logger.exception("cache get failed")
+        return None
+    if not raw:
+        return None
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return None
+
+
+async def set_json(key: str, value: Any, ttl: int) -> None:
+    client = await get_redis()
+    if client is None:
+        return
+    try:
+        await client.set(key, json.dumps(value, ensure_ascii=False), ex=ttl)
+    except Exception:
+        logger.exception("cache set failed")

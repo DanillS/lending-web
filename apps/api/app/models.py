@@ -179,6 +179,7 @@ class Order(Base):
     status: Mapped[OrderStatus] = mapped_column(Enum(OrderStatus), default=OrderStatus.new)
     customer_name: Mapped[str] = mapped_column(String(120), nullable=False)
     phone: Mapped[str] = mapped_column(String(32), nullable=False)
+    address: Mapped[str] = mapped_column(String(300), default="")
     comment: Mapped[str] = mapped_column(Text, default="")
     total_snapshot: Mapped[int] = mapped_column(Integer, nullable=False)
     cart_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("carts.id"))

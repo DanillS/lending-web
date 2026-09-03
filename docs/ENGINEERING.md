@@ -4,7 +4,7 @@
 
 ## 1. Архитектура
 
-Модульный монолит, слои `routers` / `services` / `models`. Не микросервисы. Схема — Alembic, не Flyway. Брокера нет: Telegram после INSERT заявки. OpenAPI: `/docs` локально, `/openapi.json` всегда. C4 и ADR — в этой папке.
+Модульный монолит, слои `routers` / `services` / `models`. Не микросервисы. Схема — Alembic, не Flyway. Брокера нет: Telegram после INSERT заявки. DaData — подсказки адреса и (опционально) cleaner телефона, таймаут 2.5 с, без ключа заявка жива. OpenAPI: `/docs` локально, `/openapi.json` всегда. C4 и ADR — в этой папке.
 
 ## 2. Тесты
 

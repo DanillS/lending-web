@@ -45,6 +45,13 @@ def test_vapid_flag():
     assert ready.vapid_configured is True
 
 
+def test_dadata_flag():
+    empty = Settings()
+    assert empty.dadata_configured is False
+    ready = Settings(dadata_api_key="token")
+    assert ready.dadata_configured is True
+
+
 def test_cors_includes_site_url():
     settings = Settings(cors_origins="http://localhost", site_url="https://elite-doors.shop")
     assert "https://elite-doors.shop" in settings.cors_origin_list

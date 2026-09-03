@@ -91,6 +91,7 @@ export type SiteInfo = {
   city: string;
   reviews: { text: string; author: string }[];
   faq: { q: string; a: string }[];
+  dadata?: boolean;
 };
 
 export type Order = {
@@ -99,6 +100,7 @@ export type Order = {
   status: "new" | "in_progress" | "closed";
   customer_name: string;
   phone: string;
+  address?: string;
   comment: string;
   total_snapshot: number;
   created_at: string;

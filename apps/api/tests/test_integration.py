@@ -28,6 +28,7 @@ def test_ready(client: TestClient):
     body = res.json()
     assert body["postgres"] is True
     assert body["redis"] is True
+    assert "dadata" in body
 
 
 def test_openapi_and_catalog(client: TestClient):

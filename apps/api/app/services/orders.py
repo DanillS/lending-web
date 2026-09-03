@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import uuid
 from datetime import datetime, timezone
 
@@ -10,10 +9,7 @@ from sqlalchemy.orm import selectinload
 
 from app.models import Cart, Order, OrderItem, OrderStatus
 from app.schemas import CheckoutIn, QuoteRequest
-from app.services import quote as quote_service
-from app.utils import normalize_phone
-
-logger = logging.getLogger(__name__)
+from app.services import dadata, quote as quote_service
 
 
 class QuoteChanged(Exception):
@@ -44,7 +40,8 @@ async def create_order(db: AsyncSession, cart: Cart, payload: CheckoutIn) -> Ord
             public_number=await next_public_number(db),
             status=OrderStatus.new,
             customer_name=payload.name.strip(),
-            phone=normalize_phone(payload.phone) or payload.phone,
+            phone=await dadata.resolve_phone(payload.phone),
+            address=payload.address.strip(),
             comment=payload.comment.strip(),
             total_snapshot=0,
             cart_id=cart.id,
@@ -81,7 +78,8 @@ async def create_order(db: AsyncSession, cart: Cart, payload: CheckoutIn) -> Ord
         public_number=await next_public_number(db),
         status=OrderStatus.new,
         customer_name=payload.name.strip(),
-        phone=normalize_phone(payload.phone) or payload.phone,
+        phone=await dadata.resolve_phone(payload.phone),
+        address=payload.address.strip(),
         comment=payload.comment.strip(),
         total_snapshot=fresh_total,
         cart_id=cart.id,

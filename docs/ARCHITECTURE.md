@@ -13,10 +13,12 @@ flowchart LR
   shop[DoorsShop_VPS]
   tg[Telegram_API]
   push[Web_Push]
+  dadata[DaData]
   dns[DNS_A_record]
   buyer --> dns --> shop
   shop --> tg
   shop --> push
+  shop --> dadata
   tg --> mgr
   push --> mgr
   buyer -->|"заявка"| shop

@@ -107,6 +107,7 @@ function OrderCard({
       <p className="text-sm">
         {order.customer_name} · {order.phone}
       </p>
+      {order.address ? <p className="mt-1 line-clamp-2 text-xs text-muted">{order.address}</p> : null}
       {order.comment ? <p className="mt-1 line-clamp-2 text-xs text-muted">{order.comment}</p> : null}
       <ul className="mt-2 space-y-0.5 text-xs text-muted">
         {order.items.slice(0, 3).map((item) => (

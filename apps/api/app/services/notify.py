@@ -26,6 +26,7 @@ def _order_html(order: Order) -> str:
         f"<h2>Заявка {html_escape(order.public_number)}</h2>"
         f"<p><b>Имя:</b> {html_escape(order.customer_name)}</p>"
         f"<p><b>Телефон:</b> {html_escape(order.phone)}</p>"
+        f"<p><b>Адрес:</b> {html_escape(getattr(order, 'address', None)) or 'нет'}</p>"
         f"<p><b>Комментарий:</b> {html_escape(order.comment) or 'нет'}</p>"
         f"<p><b>Сумма:</b> {order.total_snapshot} ₽</p>"
         f"<table border='1' cellpadding='6'><tr><th>Позиция</th><th>Кол-во</th><th>Сумма</th></tr>{rows}</table>"
@@ -40,6 +41,7 @@ def _order_telegram(order: Order) -> str:
         f"<b>Новая заявка {html_escape(order.public_number)}</b>\n"
         f"<b>Имя:</b> {html_escape(order.customer_name)}\n"
         f"<b>Телефон:</b> {html_escape(order.phone)}\n"
+        f"<b>Адрес:</b> {html_escape(getattr(order, 'address', None)) or 'нет'}\n"
         f"<b>Комментарий:</b> {html_escape(order.comment) or 'нет'}\n"
         f"<b>Сумма:</b> {order.total_snapshot} ₽\n\n{lines}"
     )

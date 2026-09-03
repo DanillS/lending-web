@@ -38,6 +38,7 @@ docker compose -f infra/docker-compose.yml up --build
 - `SITE_URL` и `NEXT_PUBLIC_SITE_URL` — `https://elite-doors.shop`
 - `CORS_ORIGINS` — тот же домен без слеша
 - `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` — иначе заявки только в админке и в PWA-пуше. На VPS: `./infra/enable-telegram.sh "<token>" "<chat_id>"`
+- `DADATA_API_KEY` — подсказки адреса на `/checkout` (бесплатный ключ в [кабинете DaData](https://dadata.ru/profile/#info)). Без ключа адрес всё равно можно вписать руками. `DADATA_SECRET` — нормализация телефона через платный cleaner; без него телефон чистится локально.
 
 4. Стек (nginx только на `127.0.0.1:8080`):
 

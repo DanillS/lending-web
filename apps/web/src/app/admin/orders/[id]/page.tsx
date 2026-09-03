@@ -118,6 +118,10 @@ export default function AdminOrderPage() {
               </a>
             </dd>
           </div>
+          <div className="sm:col-span-2">
+            <dt className="text-muted">Адрес</dt>
+            <dd className="font-medium">{order.address || "не указан"}</dd>
+          </div>
         </dl>
         <div className="mt-4">
           <p className="text-sm text-muted">Комментарий</p>

@@ -27,6 +27,7 @@ async def site(db: AsyncSession = Depends(get_db)) -> SitePublicOut:
         city=data.get("city", "Казань"),
         reviews=data.get("reviews", []),
         faq=data.get("faq", []),
+        dadata=settings.dadata_configured,
     )
 
 

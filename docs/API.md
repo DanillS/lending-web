@@ -18,7 +18,9 @@
 | POST | `/api/v1/cart/items` | положить позицию |
 | DELETE | `/api/v1/cart/items/{id}` | убрать |
 | POST | `/api/v1/orders` | заявка (honeypot + rate limit) |
-| GET | `/api/v1/site` | телефон, FAQ, отзывы |
+| POST | `/api/v1/suggest/address` | подсказки DaData, пустой список если нет ключа или таймаут |
+| POST | `/api/v1/phone/normalize` | +7…; DaData cleaner если есть `DADATA_SECRET`, иначе локально |
+| GET | `/api/v1/site` | телефон, FAQ, отзывы, флаг `dadata` |
 
 ## Админка (`/api/v1/admin`, cookie JWT)
 

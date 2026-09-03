@@ -1,5 +1,6 @@
 "use client";
 
+import { AddressField } from "@/components/AddressField";
 import { apiGet, apiSend } from "@/lib/api";
 import { useCart } from "@/lib/cart";
 import { formatPrice, newIdempotencyKey } from "@/lib/format";
@@ -11,6 +12,7 @@ export default function CheckoutPage() {
   const [site, setSite] = useState<SiteInfo | null>(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [comment, setComment] = useState("");
   const [consent, setConsent] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -24,6 +26,19 @@ export default function CheckoutPage() {
     void apiGet<SiteInfo>("/api/v1/site").then(setSite).catch(() => null);
   }, []);
 
+  async function formatPhone() {
+    const raw = phone.trim();
+    if (raw.length < 10) return;
+    try {
+      const data = await apiSend<{ phone: string; valid: boolean }>("/api/v1/phone/normalize", "POST", {
+        phone: raw,
+      });
+      if (data.valid) setPhone(data.phone);
+    } catch {
+      /* keep typed value */
+    }
+  }
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -32,6 +47,7 @@ export default function CheckoutPage() {
       const order = await apiSend<{ public_number: string }>("/api/v1/orders", "POST", {
         name,
         phone,
+        address,
         comment,
         consent,
         honeypot,
@@ -104,7 +120,9 @@ export default function CheckoutPage() {
           className="w-full rounded-xl border border-line px-4 py-3"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          onBlur={() => void formatPhone()}
         />
+        <AddressField value={address} onChange={setAddress} enabled={site?.dadata ?? true} />
         <textarea
           rows={4}
           placeholder="Комментарий"
