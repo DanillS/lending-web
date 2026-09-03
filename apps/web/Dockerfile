@@ -1,7 +1,7 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
-COPY apps/web/package.json ./
-RUN npm install
+COPY apps/web/package.json apps/web/package-lock.json ./
+RUN npm ci
 COPY apps/web .
 COPY public/images ./public/images
 COPY public/beutyDoor ./public/beutyDoor
