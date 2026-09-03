@@ -11,7 +11,7 @@
 
 ## Заявки не приходят в Telegram
 
-1. `/health/ready` → `"telegram": false` — пустые `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`.
+1. `/health/ready` → `"telegram": false` — пустые `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`. На сервере: `./infra/enable-telegram.sh "<token>" "<chat_id>"` (бот: @BotFather; chat id — написать боту и `getUpdates`).
 2. Токены есть, в логах `Telegram error` — неверный chat id или бот не писал в чат.
 3. Заявка всё равно должна быть в `/admin/orders`.
 

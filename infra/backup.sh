@@ -6,6 +6,7 @@ set -eu
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 COMPOSE_BASE="$ROOT/infra/docker-compose.yml"
+ENV_FILE="$ROOT/.env"
 KEEP_DAYS="${BACKUP_KEEP_DAYS:-14}"
 DIR="$ROOT/backups"
 STAMP="$(date +%Y%m%d-%H%M%S)"
@@ -13,7 +14,11 @@ STAMP="$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$DIR"
 
 compose() {
-  docker compose -f "$COMPOSE_BASE" "$@"
+  if [ -f "$ENV_FILE" ]; then
+    docker compose --env-file "$ENV_FILE" -f "$COMPOSE_BASE" "$@"
+  else
+    docker compose -f "$COMPOSE_BASE" "$@"
+  fi
 }
 
 SQL="$DIR/doors-$STAMP.sql.gz"

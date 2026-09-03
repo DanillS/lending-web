@@ -6,11 +6,13 @@ Cursor уже ходит в браузер (`cursor-ide-browser`) и в Figma. �
 
 **Playwright** — агент может гонять сценарии витрины без выдуманного DOM. Нужен Node и первый `npx playwright install chromium` (один раз на машине).
 
+**GitHub** — PR и checks из Cursor. В `.cursor/mcp.json` пустой `GITHUB_PERSONAL_ACCESS_TOKEN`: вставьте fine-grained token (repo + checks) в настройках MCP, файл не коммитьте с секретом.
+
 ## Добавьте сами, если пользуетесь каждый день
 
 | MCP | Зачем | Секрет |
 | --- | --- | --- |
-| GitHub | PR, checks, релизы | `GITHUB_TOKEN` с узким scope |
+| GitHub | уже в mcp.json, нужен token | `GITHUB_TOKEN` с узким scope |
 | Sentry | ошибки прода | DSN / org auth после появления `SENTRY_DSN` |
 | Context7 / docs | актуальные доки Next/FastAPI | обычно без ключа |
 
