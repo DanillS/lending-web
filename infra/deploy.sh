@@ -55,7 +55,8 @@ case "$site" in
 esac
 
 echo "Building and starting production stack (nginx on 127.0.0.1:8080)…"
-docker compose -f "$COMPOSE_BASE" -f "$COMPOSE_PROD" up -d --build
+# Compose reads interpolation from the project dir (infra/), not the repo .env, unless we pass --env-file.
+docker compose --env-file "$ENV_FILE" -f "$COMPOSE_BASE" -f "$COMPOSE_PROD" up -d --build
 echo
 echo "Point Caddy at 127.0.0.1:8080 using $ROOT/infra/Caddyfile"
 echo "DNS A-record for the domain must target this VPS, not Vercel."

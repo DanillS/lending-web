@@ -3,7 +3,6 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
 
 jobs:
   api:
@@ -21,7 +20,7 @@ jobs:
       - name: Lint
         run: ruff check app tests
       - name: Unit tests + coverage
-        run: pytest tests/test_utils.py tests/test_quote.py tests/test_config.py tests/test_logging.py
+        run: pytest tests/test_utils.py tests/test_quote.py tests/test_config.py tests/test_logging.py tests/test_notify.py
 
   integration:
     runs-on: ubuntu-latest
@@ -83,6 +82,27 @@ jobs:
       - name: Tests
         run: npm test
 
+  e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    env:
+      E2E_BASE_URL: https://elite-doors.shop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Smoke storefront
+        run: npm run test:e2e
+
   gitleaks:
     runs-on: ubuntu-latest
     steps:
@@ -96,7 +116,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@v0.35.0
         with:
           scan-type: fs
           scan-ref: .

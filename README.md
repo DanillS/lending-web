@@ -37,7 +37,7 @@ docker compose -f infra/docker-compose.yml up --build
 - `SECRET_KEY`, `ADMIN_PASSWORD`, `POSTGRES_PASSWORD` — из скрипта, не дефолты
 - `SITE_URL` и `NEXT_PUBLIC_SITE_URL` — `https://elite-doors.shop`
 - `CORS_ORIGINS` — тот же домен без слеша
-- `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` — иначе заявки только в админке и в PWA-пуше
+- `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` — иначе заявки только в админке и в PWA-пуше. На VPS: `./infra/enable-telegram.sh "<token>" "<chat_id>"`
 
 4. Стек (nginx только на `127.0.0.1:8080`):
 

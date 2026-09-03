@@ -18,7 +18,7 @@
 
 ## 3. CI/CD
 
-GitHub Actions: ruff → pytest+cov → integration → vitest → Gitleaks → Trivy. CodeQL отдельно. Deploy — `infra/deploy.sh`, не Argo. Dependabot weekly.
+GitHub Actions: ruff → pytest+cov → integration → vitest → Playwright smoke (`https://elite-doors.shop`) → Gitleaks → Trivy. CodeQL отдельно. Deploy — `infra/deploy.sh --env-file`, не Argo. Dependabot weekly.
 
 ## 4. Безопасность
 

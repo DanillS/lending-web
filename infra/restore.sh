@@ -6,6 +6,7 @@ set -eu
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 COMPOSE_BASE="$ROOT/infra/docker-compose.yml"
+ENV_FILE="$ROOT/.env"
 
 if [ "${1:-}" = "" ]; then
   echo "Usage: $0 backups/doors-….sql.gz [backups/uploads-….tar.gz]" >&2
@@ -16,7 +17,11 @@ SQL="$1"
 UPLOADS="${2:-}"
 
 compose() {
-  docker compose -f "$COMPOSE_BASE" "$@"
+  if [ -f "$ENV_FILE" ]; then
+    docker compose --env-file "$ENV_FILE" -f "$COMPOSE_BASE" "$@"
+  else
+    docker compose -f "$COMPOSE_BASE" "$@"
+  fi
 }
 
 echo "Restoring Postgres from $SQL"

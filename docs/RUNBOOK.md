@@ -11,7 +11,7 @@
 
 ## Заявки не приходят в Telegram
 
-1. `/health/ready` → `"telegram": false` — пустые `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`.
+1. `/health/ready` → `"telegram": false` — пустые `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`. На сервере: `./infra/enable-telegram.sh "<token>" "<chat_id>"` (бот: @BotFather; chat id — написать боту и `getUpdates`).
 2. Токены есть, в логах `Telegram error` — неверный chat id или бот не писал в чат.
 3. Заявка всё равно должна быть в `/admin/orders`.
 
@@ -33,3 +33,11 @@
 ## Подозрение на брутфорс `/admin/login`
 
 Nginx 5 req/min + Redis 10 / 15 мин. Смотреть 429 в логах nginx. При необходимости `infra/ufw.sh` и смена пароля.
+
+## SSH только по ключу
+
+С Mac: `./infra/install-ssh-key.sh root@IP`. На сервере: `./infra/harden-ssh.sh`. Проверка: `ssh -o BatchMode=yes root@IP`.
+
+## Скачать бэкап на Mac
+
+На VPS: `./infra/backup.sh`. С Mac: `mkdir -p ~/elite-doors-backups && scp root@IP:/opt/lending-web/backups/doors-*.sql.gz ~/elite-doors-backups/`
