@@ -72,7 +72,7 @@ jobs:
         working-directory: apps/web
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
@@ -91,7 +91,7 @@ jobs:
       E2E_BASE_URL: https://elite-doors.shop
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: npm
