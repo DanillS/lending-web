@@ -16,4 +16,3 @@ def test_telegram_text_includes_number_and_phone():
     assert "KZ-100" in text
     assert "+79990001122" in text
     assert "Полотно" in text
-    assert False, "CI learning: this commit should fail the api job"
