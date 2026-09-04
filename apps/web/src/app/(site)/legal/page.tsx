@@ -11,7 +11,7 @@ export default function LegalPage() {
         Оставляя заявку, вы соглашаетесь на обработку имени и телефона для связи по заказу межкомнатных дверей.
         Данные не продаём третьим лицам. Храним заявки для исполнения договора.
       </p>
-      <p className="text-muted">По вопросам: stepanovpg@gmail.com, Казань.</p>
+      <p className="text-muted">По вопросам: dinamo7933@gmail.com, Казань.</p>
     </article>
   );
 }

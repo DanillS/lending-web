@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from sqlalchemy import func, or_, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.attributes import flag_modified
 
 from app.config import get_settings
 from app.models import Product, ProductImage, ProductType, SiteSetting, User
@@ -17,6 +18,10 @@ from app.utils import slugify
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
+
+PUBLIC_PHONE = "+79046726360"
+PUBLIC_EMAIL = "dinamo7933@gmail.com"
+PUBLIC_WHATSAPP = "https://wa.me/79046726360"
 
 GLASS_NAME = {
     "С матовым стеклом": "матовое стекло",
@@ -107,17 +112,24 @@ async def seed(db: AsyncSession) -> None:
         await _seed_accessories(db)
         await _refresh_search(db)
     await _repair_catalog(db)
+    await _sync_public_contacts(db)
+    await db.commit()
 
-    if not await db.scalar(select(SiteSetting).where(SiteSetting.key == "public")):
+
+async def _sync_public_contacts(db: AsyncSession) -> None:
+    contacts = {
+        "phone": PUBLIC_PHONE,
+        "whatsapp": PUBLIC_WHATSAPP,
+        "email": PUBLIC_EMAIL,
+    }
+    row = await db.scalar(select(SiteSetting).where(SiteSetting.key == "public"))
+    if not row:
         db.add(
             SiteSetting(
                 key="public",
                 value={
                     "name": "Качественные двери",
-                    "phone": "+7 (950) 310-15-60",
-                    "whatsapp": "https://wa.me/79503101560",
                     "telegram": "https://t.me/pr0gger/",
-                    "email": "stepanovpg@gmail.com",
                     "city": "Казань",
                     "reviews": [
                         {"text": "Быстрая установка, отличное качество! Вернусь снова.", "author": "Алексей Иванов"},
@@ -135,10 +147,17 @@ async def seed(db: AsyncSession) -> None:
                             "a": "Соберите комплект в корзине или напишите в WhatsApp — перезвоним в течение 15 минут.",
                         },
                     ],
+                    **contacts,
                 },
             )
         )
-    await db.commit()
+        return
+    value = dict(row.value)
+    if all(value.get(key) == contacts[key] for key in contacts):
+        return
+    value.update(contacts)
+    row.value = value
+    flag_modified(row, "value")
 
 
 async def _seed_catalog(db: AsyncSession) -> None:

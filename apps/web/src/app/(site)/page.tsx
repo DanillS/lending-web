@@ -17,9 +17,9 @@ export default async function HomePage() {
     site = {
       name: "Качественные двери",
       phone: "",
-      whatsapp: "https://wa.me/79503101560",
+      whatsapp: "https://wa.me/79046726360",
       telegram: "https://t.me/pr0gger/",
-      email: "stepanovpg@gmail.com",
+      email: "dinamo7933@gmail.com",
       city: "Казань",
       reviews: [],
       faq: [],

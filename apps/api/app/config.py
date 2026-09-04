@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     vapid_subject: str = ""
     email_user: str = ""
     email_pass: str = ""
-    admin_phone: str = "79503101560"
+    admin_phone: str = "79046726360"
     upload_dir: str = "uploads"
     sentry_dsn: str = ""
     dadata_api_key: str = ""

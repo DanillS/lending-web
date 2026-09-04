@@ -11,10 +11,10 @@ async function loadSite(): Promise<SiteInfo> {
   } catch {
     return {
       name: "Качественные двери",
-      phone: "+7 (950) 310-15-60",
-      whatsapp: "https://wa.me/79503101560",
+      phone: "+79046726360",
+      whatsapp: "https://wa.me/79046726360",
       telegram: "https://t.me/pr0gger/",
-      email: "stepanovpg@gmail.com",
+      email: "dinamo7933@gmail.com",
       city: "Казань",
       reviews: [],
       faq: [],
