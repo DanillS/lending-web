@@ -5,12 +5,7 @@ description: >-
   Use when changing catalog, quote, cart, admin, deploy, or CI.
 ---
 
-# Doors shop
+Читай [AGENTS.md](../../../AGENTS.md) в корне репозитория. Других docs нет.
 
-Modular monolith. Do not introduce microservices, Kafka, Kubernetes, Flyway, or a payment gateway unless the user explicitly asks.
-
-- Quote math lives in `apps/api/app/services/quote.py`.
-- Schema changes go through Alembic, not `create_all` in `main.py`.
-- Checkout is a lead (phone), not ЮKassa.
-- Production is Compose + Caddy on one VPS; rollback is git SHA + `infra/deploy.sh`.
-- Read `docs/ARCHITECTURE.md` and `docs/adr/` before large refactors.
+Не добавляй микросервисы, Kafka, Kubernetes, Flyway и платёжку, пока владелец явно не попросил.
+Quote — `apps/api/app/services/quote.py`. Схема — только Alembic. Checkout — лид, не ЮKassa. Прод — Compose + Caddy, откат git SHA + `infra/deploy.sh`.
