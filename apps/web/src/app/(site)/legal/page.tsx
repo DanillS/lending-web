@@ -1,5 +1,11 @@
+import { shareMeta } from "@/lib/seo";
+
 export const metadata = {
-  title: "Политика персональных данных",
+  ...shareMeta({
+    title: "Политика персональных данных",
+    description: "Как мы обрабатываем имя и телефон из заявки на межкомнатные двери в Казани.",
+    path: "/legal",
+  }),
   robots: { index: true },
 };
 

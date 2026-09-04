@@ -2,13 +2,14 @@ import { apiGet } from "@/lib/api";
 import { ProductCard } from "@/components/ProductCard";
 import { ProductList } from "@/lib/types";
 import { CatalogFilters } from "@/components/CatalogFilters";
+import { shareMeta } from "@/lib/seo";
 import { Suspense } from "react";
 
-export const metadata = {
+export const metadata = shareMeta({
   title: "Каталог межкомнатных дверей",
   description: "Более 50 моделей межкомнатных дверей. Полотно от 4 050 ₽. Коробка, наличники и фурнитура в комплекте.",
-  alternates: { canonical: "/catalog" },
-};
+  path: "/catalog",
+});
 
 type Search = {
   q?: string;

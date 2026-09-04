@@ -2,6 +2,7 @@ import { apiGet } from "@/lib/api";
 import { SiteInfo } from "@/lib/types";
 import { Footer, Header } from "@/components/Chrome";
 import { Providers } from "@/components/Providers";
+import { siteOrigin } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
     telephone: site.phone,
     email: site.email,
     address: { "@type": "PostalAddress", addressLocality: site.city, addressCountry: "RU" },
-    url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost",
+    url: siteOrigin(),
   };
 
   return (

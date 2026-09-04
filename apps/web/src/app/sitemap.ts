@@ -1,11 +1,12 @@
 import { apiGet } from "@/lib/api";
+import { siteOrigin } from "@/lib/seo";
 import { ProductList } from "@/lib/types";
 import type { MetadataRoute } from "next";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost";
+  const base = siteOrigin();
   let items: { slug: string }[] = [];
   try {
     const data = await apiGet<ProductList>("/api/v1/products?type=door_leaf&page_size=100", { cache: "no-store" });

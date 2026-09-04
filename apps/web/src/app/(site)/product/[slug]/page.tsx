@@ -1,6 +1,7 @@
 import { apiGet } from "@/lib/api";
 import { Configurator } from "@/components/Configurator";
 import { formatPrice } from "@/lib/format";
+import { shareImageUrl, shareMeta } from "@/lib/seo";
 import { Product } from "@/lib/types";
 import { notFound } from "next/navigation";
 
@@ -10,14 +11,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   try {
     const product = await apiGet<Product>(`/api/v1/products/${slug}`, { cache: "no-store" });
-    return {
-      title: product.seo_title || product.name,
-      description: product.seo_description || product.description,
-      alternates: { canonical: `/product/${product.slug}` },
-      openGraph: { images: product.images[0] ? [product.images[0].url] : undefined },
-    };
+    const price = `от ${formatPrice(product.current_price)} ₽`;
+    const description =
+      product.seo_description ||
+      product.description ||
+      `${product.name} — ${price}. Межкомнатные двери в Казани, заявка без оплаты на сайте.`;
+    return shareMeta({
+      title: product.seo_title || `${product.name} — ${price}`,
+      description,
+      path: `/product/${product.slug}`,
+      image: product.images[0]?.url,
+    });
   } catch {
-    return { title: "Товар" };
+    return shareMeta({ title: "Товар", description: "Межкомнатные двери в Казани.", path: `/product/${slug}` });
   }
 }
 
@@ -36,7 +42,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     "@type": "Product",
     name: product.name,
     description: product.description,
-    image,
+    image: shareImageUrl(image),
     brand: product.brand,
     offers: {
       "@type": "Offer",

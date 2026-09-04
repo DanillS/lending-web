@@ -1,8 +1,10 @@
-export const metadata = {
+import { shareMeta } from "@/lib/seo";
+
+export const metadata = shareMeta({
   title: "Доставка и установка дверей в Казани",
   description: "Доставка межкомнатных дверей по Казани за 1–2 дня. Установка под ключ, врезка фурнитуры.",
-  alternates: { canonical: "/delivery" },
-};
+  path: "/delivery",
+});
 
 export const dynamic = "force-dynamic";
 
