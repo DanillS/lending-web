@@ -19,9 +19,9 @@ from app.utils import slugify
 logger = logging.getLogger(__name__)
 settings = get_settings()
 
-PUBLIC_PHONE = "+79046726360"
+PUBLIC_PHONE = "+79047634580"
 PUBLIC_EMAIL = "dinamo7933@gmail.com"
-PUBLIC_WHATSAPP = "https://wa.me/79046726360"
+PUBLIC_WHATSAPP = "https://wa.me/79047634580"
 
 GLASS_NAME = {
     "С матовым стеклом": "матовое стекло",

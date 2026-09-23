@@ -20,9 +20,9 @@ async def site(db: AsyncSession = Depends(get_db)) -> SitePublicOut:
     data = row.value if row else {}
     return SitePublicOut(
         name=data.get("name", settings.site_name),
-        phone=data.get("phone", "+79046726360"),
-        whatsapp=data.get("whatsapp", "https://wa.me/79046726360"),
-        telegram=data.get("telegram", "https://t.me/pr0gger/"),
+        phone=data.get("phone", "+79047634580"),
+        whatsapp=data.get("whatsapp", "https://wa.me/79047634580"),
+        telegram=data.get("telegram", "https://t.me/Elite_doors_shop/"),
         email=data.get("email", "dinamo7933@gmail.com"),
         city=data.get("city", "Казань"),
         reviews=data.get("reviews", []),

@@ -12,8 +12,8 @@ async function loadSite(): Promise<SiteInfo> {
   } catch {
     return {
       name: "Качественные двери",
-      phone: "+79046726360",
-      whatsapp: "https://wa.me/79046726360",
+      phone: "+79047634580",
+      whatsapp: "https://wa.me/79047634580",
       telegram: "https://t.me/pr0gger/",
       email: "dinamo7933@gmail.com",
       city: "Казань",

@@ -17,7 +17,7 @@ export default async function HomePage() {
     site = {
       name: "Качественные двери",
       phone: "",
-      whatsapp: "https://wa.me/79046726360",
+      whatsapp: "https://wa.me/79047634580",
       telegram: "https://t.me/pr0gger/",
       email: "dinamo7933@gmail.com",
       city: "Казань",
@@ -130,12 +130,12 @@ export default async function HomePage() {
             site?.faq?.length
               ? site.faq
               : [
-                  { q: "Есть ли гарантия?", a: "Да, на все двери гарантия до 5 лет, на монтаж — 1 год." },
-                  {
-                    q: "Как сделать заказ?",
-                    a: "Соберите комплект в корзине или напишите в WhatsApp — перезвоним в течение 15 минут.",
-                  },
-                ]
+                { q: "Есть ли гарантия?", a: "Да, на все двери гарантия до 5 лет, на монтаж — 1 год." },
+                {
+                  q: "Как сделать заказ?",
+                  a: "Соберите комплект в корзине или напишите в WhatsApp — перезвоним в течение 15 минут.",
+                },
+              ]
           }
         />
       </section>
