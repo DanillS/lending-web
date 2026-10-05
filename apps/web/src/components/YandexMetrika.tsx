@@ -4,7 +4,7 @@ import Script from 'next/script';
 
 const YM_ID = 113441242;
 
-export default function YandexMetrika() {
+export function YandexMetrika() {
     return (
         <>
             <Script id="yandex-metrika" strategy="afterInteractive">
