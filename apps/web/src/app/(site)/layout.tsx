@@ -2,6 +2,7 @@ import { apiGet } from "@/lib/api";
 import { SiteInfo } from "@/lib/types";
 import { Footer, Header } from "@/components/Chrome";
 import { Providers } from "@/components/Providers";
+import { YandexMetrika } from "@/components/YandexMetrika"
 import { siteOrigin } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -40,6 +41,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Providers>
         <Header site={site} />
+        <YandexMetrika />
         <main>{children}</main>
         <Footer site={site} />
       </Providers>
